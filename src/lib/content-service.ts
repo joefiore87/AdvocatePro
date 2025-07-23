@@ -145,3 +145,14 @@ export async function updateContentItem(categoryId: string, itemId: string, valu
     return false;
   }
 }
+
+/**
+ * Initialize content
+ * Client-side function that sets up initial content structures
+ */
+export async function initializeContent(): Promise<void> {
+  // Implementation for initializing content
+  // This could involve fetching initial data or setting up content structures
+  console.log('Initializing content');
+  // Add actual initialization logic here as needed
+}
