@@ -1,4 +1,4 @@
-import { initializeContent } from '../src/lib/content-service';
+import { initializeContent } from '../src/lib/server/content-service';
 import dotenv from 'dotenv';
 
 // Load environment variables

@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 
 type ToastProps = {
+  id: string;
   title?: string;
   description?: string;
   variant?: 'default' | 'destructive';
@@ -13,7 +14,7 @@ type ToastProps = {
 export function useToast() {
   const [toasts, setToasts] = useState<ToastProps[]>([]);
 
-  const toast = (props: ToastProps) => {
+  const toast = (props: Omit<ToastProps, 'id'>) => {
     const id = Math.random().toString(36).substring(2, 9);
     const newToast = { ...props, id };
     setToasts((prevToasts) => [...prevToasts, newToast]);

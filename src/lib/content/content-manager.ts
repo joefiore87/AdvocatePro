@@ -1,16 +1,19 @@
-import { db } from '@/lib/firebase';
-import { 
-  collection, 
-  doc, 
-  getDoc, 
-  setDoc, 
-  updateDoc, 
-  getDocs, 
-  query, 
+import { app } from '@/lib/firebase';
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  getDocs,
+  query,
   where,
   orderBy,
-  serverTimestamp 
+  serverTimestamp
 } from 'firebase/firestore';
+
+const db = getFirestore(app);
 
 export interface ContentItem {
   id: string;

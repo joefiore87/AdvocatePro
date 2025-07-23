@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 import { useState } from 'react';
-import { initializeContent } from '@/lib/content-service';
 import { useToast } from '@/hooks/use-toast';
 
 export default function SettingsPage() {
@@ -15,13 +14,15 @@ export default function SettingsPage() {
     setInitializing(true);
     
     try {
-      const result = await initializeContent();
+      const response = await fetch('/api/admin/content/init', {
+        method: 'POST',
+      });
+      
+      const result = await response.json();
       
       toast({
-        title: result ? 'Content initialized' : 'Already initialized',
-        description: result 
-          ? 'Default content has been successfully initialized.' 
-          : 'Content was already initialized. No changes were made.',
+        title: result.success ? 'Content initialized' : 'Already initialized',
+        description: result.message,
       });
     } catch (error) {
       console.error('Error initializing content:', error);

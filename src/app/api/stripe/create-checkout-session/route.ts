@@ -17,12 +17,18 @@ export async function POST(req: NextRequest) {
   }
   
   try {
+    const { priceId } = await req.json();
+
+    if (!priceId) {
+      return NextResponse.json({ error: 'Price ID is required' }, { status: 400 });
+    }
+
     // Create a checkout session
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
       line_items: [{
-        price: process.env.STRIPE_PRICE_ID || 'price_1RnmTdAHtQyvoAZvn7tC8vvo',
+        price: priceId,
         quantity: 1,
       }],
       customer_email: user.email,

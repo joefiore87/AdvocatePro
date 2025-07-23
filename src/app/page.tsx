@@ -96,8 +96,9 @@ export default function Home() {
                 <Image
                   src="https://placehold.co/1280x720.png"
                   alt="Screen recording of the Advocacy Toolkit"
-                  layout="fill"
-                  objectFit="cover"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  priority
                   data-ai-hint="app screen recording"
                 />
               </div>

@@ -1,6 +1,8 @@
-import { getFirestore, doc, getDoc, setDoc } from 'firebase-admin/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
+import { initializeFirebaseAdmin } from '../firebase-admin-init';
 import { getApp } from 'firebase-admin/app';
 
+initializeFirebaseAdmin();
 // Use the admin app initialized in auth-middleware.ts
 const db = getFirestore(getApp());
 
@@ -20,9 +22,9 @@ export async function checkUserAccess(email: string): Promise<boolean> {
   try {
     if (!email) return false;
     
-    const subscriptionDoc = await getDoc(doc(db, 'subscriptions', email));
+    const subscriptionDoc = await db.collection('subscriptions').doc(email).get();
     
-    if (!subscriptionDoc.exists()) {
+    if (!subscriptionDoc.exists) {
       return false;
     }
     
@@ -45,10 +47,10 @@ export async function getUserSubscription(email: string): Promise<SubscriptionDa
   try {
     if (!email) return null;
     
-    const docRef = doc(db, 'subscriptions', email);
-    const docSnap = await getDoc(docRef);
+    const docRef = db.collection('subscriptions').doc(email);
+    const docSnap = await docRef.get();
     
-    if (docSnap.exists()) {
+    if (docSnap.exists) {
       return docSnap.data() as SubscriptionData;
     }
     
@@ -65,7 +67,7 @@ export async function getUserSubscription(email: string): Promise<SubscriptionDa
  */
 export async function createOrUpdateSubscription(data: SubscriptionData): Promise<void> {
   try {
-    await setDoc(doc(db, 'subscriptions', data.email), data);
+    await db.collection('subscriptions').doc(data.email).set(data);
   } catch (error) {
     console.error('Error saving subscription:', error);
     throw error;

@@ -31,28 +31,33 @@ export function ProfileForm() {
 
   const handleChange = (name: string, value: any) => {
     const keys = name.split('.');
+    let newFormData: Profile;
     if (keys.length > 1) {
-        setFormData((prev: any) => ({
-            ...prev,
-            [keys[0]]: {
-                ...prev[keys[0]],
-                [keys[1]]: value,
-            },
-        }));
+      newFormData = {
+        ...formData,
+        [keys[0]]: {
+          ...(formData as any)[keys[0]],
+          [keys[1]]: value,
+        },
+      };
     } else {
-        setFormData((prev: any) => ({ ...prev, [name]: value }));
+      newFormData = { ...formData, [name]: value };
     }
+    setFormData(newFormData);
+    setProfile(newFormData);
   };
   
-  const handleMultipleCheckbox = (name: string, value: string, checked: boolean) => {
-    const currentArray = (formData as any)[name] || [];
+  const handleMultipleCheckbox = (name: keyof Profile, value: string, checked: boolean) => {
+    const currentArray = (formData[name] as string[] | undefined) || [];
     let newArray;
     if (checked) {
       newArray = [...currentArray, value];
     } else {
       newArray = currentArray.filter((item: string) => item !== value);
     }
-    setFormData((prev: any) => ({ ...prev, [name]: newArray }));
+    const newFormData = { ...formData, [name]: newArray };
+    setFormData(newFormData);
+    setProfile(newFormData);
   };
 
   const nextStep = () => setStep(step + 1);

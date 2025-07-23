@@ -1,6 +1,8 @@
-import { getFirestore, doc, getDoc, setDoc } from 'firebase-admin/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
+import { initializeFirebaseAdmin } from '../firebase-admin-init';
 import { getApp } from 'firebase-admin/app';
 
+initializeFirebaseAdmin();
 // Use the admin app initialized in auth-middleware.ts
 const db = getFirestore(getApp());
 
@@ -14,14 +16,14 @@ export async function getUserRole(email: string): Promise<UserRole> {
   if (!email) return null;
   
   try {
-    const userDoc = await getDoc(doc(db, 'users', email));
+    const userDoc = await db.collection('users').doc(email).get();
     
-    if (!userDoc.exists()) {
+    if (!userDoc.exists) {
       return null;
     }
     
     const userData = userDoc.data();
-    return (userData.role as UserRole) || 'customer';
+    return (userData?.role as UserRole) || 'customer';
   } catch (error) {
     console.error('Error getting user role:', error);
     return null;
@@ -36,7 +38,7 @@ export async function setUserRole(email: string, role: 'admin' | 'customer'): Pr
   if (!email) return false;
   
   try {
-    await setDoc(doc(db, 'users', email), { role }, { merge: true });
+    await db.collection('users').doc(email).set({ role }, { merge: true });
     return true;
   } catch (error) {
     console.error('Error setting user role:', error);
@@ -59,7 +61,7 @@ export async function isAdmin(email: string): Promise<boolean> {
  */
 export async function logAdminAccessAttempt(email: string, success: boolean, ip?: string): Promise<void> {
   try {
-    await setDoc(doc(db, 'adminAccessLogs', `${Date.now()}_${email}`), {
+    await db.collection('adminAccessLogs').doc(`${Date.now()}_${email}`).set({
       email,
       timestamp: new Date().toISOString(),
       success,

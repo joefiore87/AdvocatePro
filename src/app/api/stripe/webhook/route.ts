@@ -5,7 +5,7 @@ import { createOrUpdateSubscription } from '@/lib/server/subscription-service';
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const signature = headers().get('stripe-signature') as string;
+  const signature = (await headers()).get('stripe-signature') as string;
   
   let event;
   
@@ -27,8 +27,12 @@ export async function POST(req: Request) {
     try {
       // Get customer details
       const customer = await stripe.customers.retrieve(session.customer as string);
+
+      if (!customer || customer.deleted) {
+        throw new Error('Customer not found or deleted');
+      }
       
-      if (!customer.email) {
+      if (!('email' in customer) || !customer.email) {
         throw new Error('Customer email not found');
       }
       

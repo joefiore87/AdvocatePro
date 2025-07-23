@@ -1,7 +1,9 @@
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from 'firebase-admin/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
+import { initializeFirebaseAdmin } from '../firebase-admin-init';
 import { getApp } from 'firebase-admin/app';
 import { ContentCategory, ContentItem, DEFAULT_CONTENT } from '../content-types';
 
+initializeFirebaseAdmin();
 // Use the admin app initialized in auth-middleware.ts
 const db = getFirestore(getApp());
 
@@ -9,19 +11,19 @@ const db = getFirestore(getApp());
  * Initialize content in Firestore if it doesn't exist
  * Server-side only function
  */
-export async function initializeContent() {
+export async function initializeContent(): Promise<boolean> {
   try {
     // Check if content already exists
-    const contentRef = doc(db, 'system', 'content');
-    const contentSnap = await getDoc(contentRef);
+    const contentRef = db.collection('system').doc('content');
+    const contentSnap = await contentRef.get();
     
-    if (!contentSnap.exists()) {
+    if (!contentSnap.exists) {
       // Initialize with default content
-      await setDoc(contentRef, { initialized: true, lastUpdated: new Date().toISOString() });
+      await contentRef.set({ initialized: true, lastUpdated: new Date().toISOString() });
       
       // Create each content category
       for (const [key, category] of Object.entries(DEFAULT_CONTENT)) {
-        await setDoc(doc(db, 'content', category.id), {
+        await db.collection('content').doc(category.id).set({
           id: category.id,
           name: category.name,
           description: category.description
@@ -29,7 +31,7 @@ export async function initializeContent() {
         
         // Create each content item
         for (const item of category.items) {
-          await setDoc(doc(db, 'content', category.id, 'items', item.id), {
+          await db.collection('content').doc(category.id).collection('items').doc(item.id).set({
             ...item,
             lastUpdated: new Date().toISOString()
           });
@@ -52,10 +54,10 @@ export async function initializeContent() {
  * Get all content categories with their items
  * Server-side only function
  */
-export async function getAllContent(): Promise<Record<string, ContentCategory>> {
+export async function getAllContent(limit = 10): Promise<Record<string, ContentCategory>> {
   try {
-    const categoriesRef = collection(db, 'content');
-    const categoriesSnap = await getDocs(categoriesRef);
+    const categoriesRef = db.collection('content').limit(limit);
+    const categoriesSnap = await categoriesRef.get();
     
     const content: Record<string, ContentCategory> = {};
     
@@ -63,8 +65,8 @@ export async function getAllContent(): Promise<Record<string, ContentCategory>> 
       const categoryData = categoryDoc.data() as Omit<ContentCategory, 'items'>;
       
       // Get items for this category
-      const itemsRef = collection(db, 'content', categoryDoc.id, 'items');
-      const itemsSnap = await getDocs(itemsRef);
+      const itemsRef = db.collection('content').doc(categoryDoc.id).collection('items').limit(limit);
+      const itemsSnap = await itemsRef.get();
       
       const items: ContentItem[] = itemsSnap.docs.map(itemDoc => itemDoc.data() as ContentItem);
       
@@ -88,18 +90,18 @@ export async function getAllContent(): Promise<Record<string, ContentCategory>> 
  */
 export async function getContentCategory(categoryId: string): Promise<ContentCategory | null> {
   try {
-    const categoryRef = doc(db, 'content', categoryId);
-    const categorySnap = await getDoc(categoryRef);
+    const categoryRef = db.collection('content').doc(categoryId);
+    const categorySnap = await categoryRef.get();
     
-    if (!categorySnap.exists()) {
+    if (!categorySnap.exists) {
       return null;
     }
     
     const categoryData = categorySnap.data() as Omit<ContentCategory, 'items'>;
     
     // Get items for this category
-    const itemsRef = collection(db, 'content', categoryId, 'items');
-    const itemsSnap = await getDocs(itemsRef);
+    const itemsRef = db.collection('content').doc(categoryId).collection('items');
+    const itemsSnap = await itemsRef.get();
     
     const items: ContentItem[] = itemsSnap.docs.map(itemDoc => itemDoc.data() as ContentItem);
     
@@ -120,17 +122,17 @@ export async function getContentCategory(categoryId: string): Promise<ContentCat
  */
 export async function updateContentItem(categoryId: string, itemId: string, value: string, updatedBy?: string): Promise<boolean> {
   try {
-    const itemRef = doc(db, 'content', categoryId, 'items', itemId);
-    const itemSnap = await getDoc(itemRef);
+    const itemRef = db.collection('content').doc(categoryId).collection('items').doc(itemId);
+    const itemSnap = await itemRef.get();
     
-    if (!itemSnap.exists()) {
+    if (!itemSnap.exists) {
       console.error(`Content item ${categoryId}/${itemId} not found`);
       return false;
     }
     
     const currentItem = itemSnap.data() as ContentItem;
     
-    await setDoc(itemRef, {
+    await itemRef.set({
       ...currentItem,
       value,
       lastUpdated: new Date().toISOString(),
