@@ -1,10 +1,4 @@
-import { getFirestore } from 'firebase-admin/firestore';
-import { initializeFirebaseAdmin } from '../firebase-admin-init';
-import { getApp } from 'firebase-admin/app';
-
-initializeFirebaseAdmin();
-// Use the admin app initialized in auth-middleware.ts
-const db = getFirestore(getApp());
+import { getAdminFirestore } from '@/lib/firebase-admin-config';
 
 export interface SubscriptionData {
   customerId: string;
@@ -21,6 +15,12 @@ export interface SubscriptionData {
 export async function checkUserAccess(email: string): Promise<boolean> {
   try {
     if (!email) return false;
+    
+    const db = getAdminFirestore();
+    if (!db) {
+      console.error('Firebase Admin not initialized');
+      return false;
+    }
     
     const subscriptionDoc = await db.collection('subscriptions').doc(email).get();
     
@@ -47,8 +47,13 @@ export async function getUserSubscription(email: string): Promise<SubscriptionDa
   try {
     if (!email) return null;
     
-    const docRef = db.collection('subscriptions').doc(email);
-    const docSnap = await docRef.get();
+    const db = getAdminFirestore();
+    if (!db) {
+      console.error('Firebase Admin not initialized');
+      return null;
+    }
+    
+    const docSnap = await db.collection('subscriptions').doc(email).get();
     
     if (docSnap.exists) {
       return docSnap.data() as SubscriptionData;
@@ -67,6 +72,11 @@ export async function getUserSubscription(email: string): Promise<SubscriptionDa
  */
 export async function createOrUpdateSubscription(data: SubscriptionData): Promise<void> {
   try {
+    const db = getAdminFirestore();
+    if (!db) {
+      throw new Error('Firebase Admin not initialized');
+    }
+    
     await db.collection('subscriptions').doc(data.email).set(data);
   } catch (error) {
     console.error('Error saving subscription:', error);

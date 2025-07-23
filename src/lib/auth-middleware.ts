@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { getAuth } from 'firebase-admin/auth';
-import { initializeFirebaseAdmin } from './firebase-admin-init';
-import { isAdmin, logAdminAccessAttempt } from './server/roles-service';
-
-initializeFirebaseAdmin();
+import { getAdminAuth } from './firebase-admin-config';
 
 interface AuthUser {
   uid: string;
@@ -25,8 +20,14 @@ export async function verifyAuthToken(req: NextRequest): Promise<AuthUser | null
     const token = authHeader.split('Bearer ')[1];
     if (!token) return null;
     
+    const auth = getAdminAuth();
+    if (!auth) {
+      console.error('Firebase Admin not initialized');
+      return null;
+    }
+    
     // Verify the token
-    const decodedToken = await getAuth().verifyIdToken(token);
+    const decodedToken = await auth.verifyIdToken(token);
     
     return {
       uid: decodedToken.uid,
@@ -45,19 +46,24 @@ export async function verifyAdminAccess(req: NextRequest): Promise<AuthUser | nu
   const user = await verifyAuthToken(req);
   
   if (!user || !user.email) {
-    // Log failed access attempt (no user)
-    const ip = (req.headers.get('x-forwarded-for') ?? '127.0.0.1').split(',')[0];
-    await logAdminAccessAttempt('unknown', false, ip);
     return null;
   }
   
-  const isUserAdmin = await isAdmin(user.email);
+  const auth = getAdminAuth();
+  if (!auth) {
+    console.error('Firebase Admin not initialized');
+    return null;
+  }
   
-  // Log access attempt for security monitoring
-  const ip = (req.headers.get('x-forwarded-for') ?? '127.0.0.1').split(',')[0];
-  await logAdminAccessAttempt(user.email, isUserAdmin, ip);
-  
-  return isUserAdmin ? user : null;
+  try {
+    const adminUser = await auth.getUser(user.uid);
+    const isUserAdmin = adminUser.customClaims?.role === 'admin';
+    
+    return isUserAdmin ? user : null;
+  } catch (error) {
+    console.error('Error checking admin status:', error);
+    return null;
+  }
 }
 
 /**

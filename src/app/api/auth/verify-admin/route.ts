@@ -1,32 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAuthToken } from '@/lib/auth-middleware';
-import { isAdmin } from '@/lib/server/roles-service';
-import { rateLimiters } from '@/lib/rate-limit';
+import { getAdminAuth } from '@/lib/firebase-admin-config';
 
 export async function GET(req: NextRequest) {
-  // Apply rate limiting
-  const rateLimitResponse = await rateLimiters.auth(req);
-  if (rateLimitResponse) {
-    return rateLimitResponse;
-  }
-
   try {
-    // Verify authentication
-    const user = await verifyAuthToken(req);
-    if (!user || !user.email) {
-      return NextResponse.json({ isAdmin: false }, { status: 401 });
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ isAdmin: false, error: 'No auth token' }, { status: 401 });
     }
+
+    const token = authHeader.split('Bearer ')[1];
+    const auth = getAdminAuth();
     
-    // Check if user is admin
-    const userIsAdmin = await isAdmin(user.email);
-    
-    return NextResponse.json({ isAdmin: userIsAdmin });
+    if (!auth) {
+      console.error('Firebase Admin not initialized');
+      return NextResponse.json({ isAdmin: false, error: 'Service temporarily unavailable' }, { status: 503 });
+    }
+
+    try {
+      const decodedToken = await auth.verifyIdToken(token);
+      const user = await auth.getUser(decodedToken.uid);
+      
+      // Check custom claims for admin role
+      const isAdmin = user.customClaims?.role === 'admin';
+      
+      return NextResponse.json({ 
+        isAdmin, 
+        uid: user.uid,
+        email: user.email 
+      });
+    } catch (error) {
+      console.error('Error verifying token:', error);
+      return NextResponse.json({ isAdmin: false, error: 'Invalid token' }, { status: 401 });
+    }
   } catch (error) {
-    console.error('Error verifying admin status:', error);
-    
-    return NextResponse.json(
-      { error: 'Failed to verify admin status' },
-      { status: 500 }
-    );
+    console.error('Error in verify-admin:', error);
+    return NextResponse.json({ isAdmin: false, error: 'Internal error' }, { status: 500 });
   }
 }

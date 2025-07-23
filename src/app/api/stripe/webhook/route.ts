@@ -1,11 +1,19 @@
 import { stripe } from '@/lib/stripe';
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
-import { createOrUpdateSubscription } from '@/lib/server/subscription-service';
+import { getAdminFirestore } from '@/lib/firebase-admin-config';
+
+interface SubscriptionData {
+  customerId: string;
+  email: string;
+  purchaseDate: string;
+  expirationDate: string;
+  active: boolean;
+}
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const signature = (await headers()).get('stripe-signature') as string;
+  const signature = headers().get('stripe-signature') as string;
   
   let event;
   
@@ -27,12 +35,8 @@ export async function POST(req: Request) {
     try {
       // Get customer details
       const customer = await stripe.customers.retrieve(session.customer as string);
-
-      if (!customer || customer.deleted) {
-        throw new Error('Customer not found or deleted');
-      }
       
-      if (!('email' in customer) || !customer.email) {
+      if (!customer || customer.deleted || !customer.email) {
         throw new Error('Customer email not found');
       }
       
@@ -41,21 +45,32 @@ export async function POST(req: Request) {
       const expirationDate = new Date(purchaseDate);
       expirationDate.setFullYear(expirationDate.getFullYear() + 1);
       
+      // Get Firestore instance
+      const db = getAdminFirestore();
+      if (!db) {
+        console.error('Firebase Admin not initialized - subscription not saved');
+        // Still return 200 to acknowledge receipt
+        return new NextResponse('Webhook received but Firebase Admin not configured', { status: 200 });
+      }
+      
       // Store in Firestore
-      await createOrUpdateSubscription({
+      const subscriptionData: SubscriptionData = {
         customerId: customer.id,
         email: customer.email,
         purchaseDate: purchaseDate.toISOString(),
         expirationDate: expirationDate.toISOString(),
         active: true
-      });
+      };
+      
+      await db.collection('subscriptions').doc(customer.email).set(subscriptionData);
       
       console.log(`Subscription created for ${customer.email}, expires on ${expirationDate.toDateString()}`);
     } catch (error) {
-      console.error('Error processing subscription:', error);
-      return new NextResponse(`Error processing subscription: ${error}`, { status: 500 });
+      console.error('Error processing webhook:', error);
+      // Return 200 to prevent Stripe from retrying
+      return new NextResponse('Webhook error', { status: 200 });
     }
   }
 
-  return NextResponse.json({ received: true });
+  return new NextResponse('Webhook processed', { status: 200 });
 }

@@ -1,36 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAuthToken } from '@/lib/auth-middleware';
-import { getUserSubscription } from '@/lib/server/subscription-service';
-import { rateLimiters } from '@/lib/rate-limit';
+import { stripe } from '@/lib/stripe';
 
 export async function GET(req: NextRequest) {
-  // Apply rate limiting
-  const rateLimitResponse = await rateLimiters.api(req);
-  if (rateLimitResponse) {
-    return rateLimitResponse;
-  }
-
   try {
-    // Verify authentication
-    const user = await verifyAuthToken(req);
-    if (!user || !user.email) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    const { searchParams } = new URL(req.url);
+    const email = searchParams.get('email');
+
+    if (!email) {
+      return NextResponse.json({ subscription: null, error: 'Email required' }, { status: 400 });
     }
-    
-    // Get user subscription
-    const subscription = await getUserSubscription(user.email);
-    
-    if (!subscription) {
-      return NextResponse.json({ error: 'Subscription not found' }, { status: 404 });
+
+    // Get customer from Stripe
+    const customers = await stripe.customers.list({
+      email: email,
+      limit: 1
+    });
+
+    if (customers.data.length === 0) {
+      return NextResponse.json({ subscription: null });
     }
-    
+
+    const customer = customers.data[0];
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customer.id,
+      limit: 1
+    });
+
+    const subscription = subscriptions.data.length > 0 ? subscriptions.data[0] : null;
+
     return NextResponse.json({ subscription });
-  } catch (error) {
-    console.error('Error fetching subscription:', error);
-    
-    return NextResponse.json(
-      { error: 'Failed to fetch subscription' },
-      { status: 500 }
-    );
+
+  } catch (error: any) {
+    console.error('Error getting subscription:', error);
+    return NextResponse.json({ subscription: null, error: 'Internal error' }, { status: 500 });
   }
 }

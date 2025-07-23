@@ -1,47 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAuthToken } from '@/lib/auth-middleware';
-import { checkUserAccess } from '@/lib/server/subscription-service';
-import { rateLimiters } from '@/lib/rate-limit';
-import { LRUCache } from 'lru-cache';
-
-const cache = new LRUCache<string, boolean>({
-  max: 100,
-  ttl: 1000 * 60 * 5, // 5 minutes
-});
+import { stripe } from '@/lib/stripe';
 
 export async function GET(req: NextRequest) {
-  // Apply rate limiting
-  const rateLimitResponse = await rateLimiters.api(req);
-  if (rateLimitResponse) {
-    return rateLimitResponse;
-  }
-
   try {
-    // Verify authentication
-    const user = await verifyAuthToken(req);
-    if (!user || !user.email) {
-      return NextResponse.json({ hasAccess: false }, { status: 401 });
-    }
-    
-    // Check cache first
-    const cachedAccess = cache.get(user.email);
-    if (cachedAccess !== undefined) {
-      return NextResponse.json({ hasAccess: cachedAccess });
+    const { searchParams } = new URL(req.url);
+    const email = searchParams.get('email');
+
+    if (!email) {
+      return NextResponse.json({ hasAccess: false, error: 'Email required' }, { status: 400 });
     }
 
-    // Check user access
-    const hasAccess = await checkUserAccess(user.email);
-    
-    // Cache the result
-    cache.set(user.email, hasAccess);
+    // Check Stripe for active subscriptions
+    const customers = await stripe.customers.list({
+      email: email,
+      limit: 1
+    });
 
-    return NextResponse.json({ hasAccess });
-  } catch (error) {
-    console.error('Error checking access:', error);
-    
-    return NextResponse.json(
-      { error: 'Failed to check access' },
-      { status: 500 }
-    );
+    if (customers.data.length === 0) {
+      return NextResponse.json({ hasAccess: false, reason: 'No customer found' });
+    }
+
+    const customer = customers.data[0];
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customer.id,
+      status: 'active',
+      limit: 1
+    });
+
+    const hasAccess = subscriptions.data.length > 0;
+
+    return NextResponse.json({ 
+      hasAccess,
+      subscription: hasAccess ? subscriptions.data[0] : null 
+    });
+
+  } catch (error: any) {
+    console.error('Error checking subscription access:', error);
+    return NextResponse.json({ hasAccess: false, error: 'Internal error' }, { status: 500 });
   }
 }

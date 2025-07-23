@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import { AppLogo } from "@/components/icons";
 import Link from "next/link";
 import { CheckCircle2 } from 'lucide-react';
 
-export default function SuccessPage() {
+function SuccessPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -120,5 +121,21 @@ export default function SuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-secondary/20">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <SuccessPageContent />
+    </Suspense>
   );
 }

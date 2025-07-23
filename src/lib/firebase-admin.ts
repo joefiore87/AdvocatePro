@@ -27,32 +27,55 @@ export function getAuth() {
 }
 
 // Firebase Admin SDK initialization for server-side operations
-let adminApp: admin.app.App;
+let adminApp: admin.app.App | null = null;
 
 // Function to initialize and get Firebase Admin (safe for builds and runtime)
 export async function getAuthAdmin() {
-  // Only initialize Admin SDK in a server environment (not during build time)
-  if (typeof window !== 'undefined' || !process.env.FIREBASE_ADMIN_PRIVATE_KEY) {
-    console.warn('Admin SDK not initialized: Running in client or build environment');
+  // Only initialize Admin SDK in a server environment
+  if (typeof window !== 'undefined') {
+    console.warn('Admin SDK not available in client environment');
+    return null;
+  }
+
+  // For build time, return null to avoid initialization
+  if (process.env.NODE_ENV === 'development' && !process.env.FIREBASE_ADMIN_PROJECT_ID) {
+    console.warn('Admin SDK not configured for development build');
+    return null;
+  }
+
+  // Check for required environment variables
+  if (!process.env.FIREBASE_ADMIN_PROJECT_ID) {
+    console.warn('Firebase Admin not configured - missing project ID');
     return null;
   }
 
   if (!adminApp) {
     try {
-      adminApp = admin.initializeApp({
-        credential: admin.credential.cert({
-          projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
-          clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-          privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-        }),
-      });
-      console.log('Firebase Admin initialized successfully');
+      // For production, we need a proper service account
+      // For now, we'll use a minimal config that won't break the build
+      const serviceAccount = {
+        projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL || `firebase-adminsdk@${process.env.FIREBASE_ADMIN_PROJECT_ID}.iam.gserviceaccount.com`,
+        privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n') || undefined,
+      };
+
+      // Only initialize if we have a private key
+      if (serviceAccount.privateKey) {
+        adminApp = admin.initializeApp({
+          credential: admin.credential.cert(serviceAccount),
+        });
+        console.log('Firebase Admin initialized successfully');
+      } else {
+        console.warn('Firebase Admin private key not provided');
+        return null;
+      }
     } catch (error) {
       console.error('Error initializing Firebase Admin:', error);
       return null;
     }
   }
-  return adminApp.auth();
+  
+  return adminApp ? adminApp.auth() : null;
 }
 
 export default firebaseApp;
