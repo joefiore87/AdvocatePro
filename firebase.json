@@ -1,6 +1,6 @@
 {
   "apphosting": {
-    "backendId": "advocate-pro-backend-new",
+    "backendId": "turboparentpro",
     "rootDir": "./",
     "ignore": [
       "firebase.json",
@@ -14,7 +14,6 @@
     },
     "ui": {
       "enabled": true
-    },
-    "singleProjectMode": true
+    }
   }
 }
