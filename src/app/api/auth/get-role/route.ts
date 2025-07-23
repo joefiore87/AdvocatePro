@@ -2,8 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyAuthToken } from '@/lib/auth-middleware';
 import { getUserRole } from '@/lib/server/roles-service';
 import { rateLimiters } from '@/lib/rate-limit';
+import { getAuthAdmin } from '@/lib/firebase-server';
 
 export async function GET(req: NextRequest) {
+  // Ensure Firebase Admin is initialized
+  const authAdmin = await getAuthAdmin();
+  if (!authAdmin) {
+    return NextResponse.json({ error: 'Firebase Admin initialization failed' }, { status: 500 });
+  }
+
   // Apply rate limiting
   const rateLimitResponse = await rateLimiters.auth(req);
   if (rateLimitResponse) {
