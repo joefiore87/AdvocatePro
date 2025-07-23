@@ -55,14 +55,16 @@ export async function verifyAdminAccess(req: NextRequest): Promise<AuthUser | nu
   
   if (!user || !user.email) {
     // Log failed access attempt (no user)
-    await logAdminAccessAttempt('unknown', false, req.ip);
+    const ip = (req.headers.get('x-forwarded-for') ?? '127.0.0.1').split(',')[0];
+    await logAdminAccessAttempt('unknown', false, ip);
     return null;
   }
   
   const isUserAdmin = await isAdmin(user.email);
   
   // Log access attempt for security monitoring
-  await logAdminAccessAttempt(user.email, isUserAdmin, req.ip);
+  const ip = (req.headers.get('x-forwarded-for') ?? '127.0.0.1').split(',')[0];
+  await logAdminAccessAttempt(user.email, isUserAdmin, ip);
   
   return isUserAdmin ? user : null;
 }
