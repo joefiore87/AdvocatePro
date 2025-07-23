@@ -1,14 +1,12 @@
 {
-  "hosting": {
-    "source": ".",
+  "apphosting": {
+    "backendId": "advocate-pro-backend",
+    "rootDir": "./",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "frameworksBackend": {
-      "region": "us-east1"
-    }
+    ]
   },
   "emulators": {
     "hosting": {

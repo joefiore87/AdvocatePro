@@ -3,6 +3,8 @@
 # Firebase
 .firebase
 firebase-debug.log
+*firebase-adminsdk*.json
+service-account*.json
 
 # Dependencies
 /node_modules
