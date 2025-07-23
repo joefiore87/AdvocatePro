@@ -17,7 +17,10 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+    unoptimized: true, // This helps with Firebase Hosting deployment
   },
+  output: 'export', // Static export for Firebase Hosting
+  distDir: '.next', // Keep the default Next.js build directory
 };
 
 export default nextConfig;

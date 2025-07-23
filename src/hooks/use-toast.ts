@@ -1,3 +1,5 @@
+'use client';
+
 // Adapted from shadcn/ui toast
 import { useState, useEffect } from 'react';
 

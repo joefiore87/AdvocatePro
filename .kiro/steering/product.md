@@ -1,3 +1,7 @@
+---
+inclusion: always
+---
+
 # Special Education Advocacy Toolkit
 
 ## Product Overview
@@ -21,3 +25,28 @@ The Special Education Advocacy Toolkit is a web application designed to help par
 - Provides educational guidance through the special education process
 - Ensures privacy by keeping sensitive information local
 - Offers professional templates for various advocacy scenarios
+
+## Product Conventions
+- Use person-first language (e.g., "children with disabilities" not "disabled children")
+- Maintain a supportive, empowering tone in all user-facing content
+- Avoid educational jargon without explanation
+- Ensure all features consider accessibility needs of diverse users
+
+## UI/UX Guidelines
+- Use clear, concise language in all interfaces
+- Implement progressive disclosure for complex features
+- Maintain consistent navigation patterns throughout the application
+- Provide clear feedback for all user actions
+- Ensure all interfaces are fully accessible (WCAG AA compliance)
+
+## Data Handling
+- All sensitive user data must be stored locally when possible
+- Profile data should never be transmitted without explicit user consent
+- Implement data export/import functionality for all user-generated content
+- Use secure storage methods for any locally stored data
+
+## Content Guidelines
+- Educational content should be factually accurate and cite sources when appropriate
+- Letter templates should follow formal advocacy best practices
+- All content should be reviewed for clarity, accuracy, and sensitivity
+- Avoid making legal claims or providing legal advice
