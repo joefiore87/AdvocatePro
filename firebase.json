@@ -1,6 +1,6 @@
 {
   "apphosting": {
-    "backendId": "advocate-pro-backend",
+    "backendId": "advocate-pro-backend-new",
     "rootDir": "./",
     "ignore": [
       "firebase.json",
