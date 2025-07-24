@@ -3,10 +3,8 @@ runConfig:
   memoryMiB: 512
   concurrency: 80
 
-build:
-  commands:
-    - npm ci --include=dev
-    - npm run build
+# Build configuration is handled by App Hosting framework detection
+# No explicit build commands needed for Next.js
 
 env:
   # Public environment variables
