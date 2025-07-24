@@ -18,9 +18,9 @@ interface UpdateContentResponse {
 // Ensure Firebase Admin is initialized
 export async function PUT(
   req: NextRequest,
-  context: { params: { categoryId: string; itemId: string } }
+  context: { params: Promise<{ categoryId: string; itemId: string }> }
 ) {
-  const { categoryId, itemId } = context.params;
+  const { categoryId, itemId } = await context.params;
     // Rate-limit
   const limited = await rateLimiters.admin(req);
   if (limited) return limited;

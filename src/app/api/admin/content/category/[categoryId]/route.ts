@@ -5,8 +5,9 @@ import { rateLimiters } from '@/lib/rate-limit';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { categoryId: string } }
+  { params }: { params: Promise<{ categoryId: string }> }
 ) {
+  const { categoryId } = await params;
   // Rate-limit first
   const limited = await rateLimiters.admin(req);
   if (limited) return limited;
@@ -21,7 +22,6 @@ export async function GET(
   const authResp = await requireAdminAuth(req);
   if (authResp) return authResp;
 
-  const { categoryId } = params;
   const category = await getContentCategory(categoryId);
   if (!category) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });

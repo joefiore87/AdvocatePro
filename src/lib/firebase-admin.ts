@@ -37,9 +37,9 @@ export async function getAuthAdmin() {
     return null;
   }
 
-  // For build time, return null to avoid initialization
-  if (process.env.NODE_ENV === 'development' && !process.env.FIREBASE_ADMIN_PROJECT_ID) {
-    console.warn('Admin SDK not configured for development build');
+  // For build time, return null to avoid initialization errors
+  if (process.env.NODE_ENV === 'production' && !process.env.FIREBASE_ADMIN_PRIVATE_KEY && !process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
+    console.warn('Admin SDK not configured for production build');
     return null;
   }
 
