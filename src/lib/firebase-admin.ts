@@ -1,6 +1,7 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth as getClientAuth } from 'firebase/auth';
 import admin from 'firebase-admin';
+import fs from 'fs';
 
 // Firebase client app initialization for server-side rendering compatibility
 let firebaseApp: FirebaseApp;
@@ -38,7 +39,9 @@ export async function getAuthAdmin() {
   }
 
   // For build time, return null to avoid initialization errors
-  if (process.env.NODE_ENV === 'production' && !process.env.FIREBASE_ADMIN_PRIVATE_KEY && !process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
+  if (process.env.NODE_ENV === 'production' &&
+      !process.env.FIREBASE_ADMIN_PRIVATE_KEY &&
+      !process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
     console.warn('Admin SDK not configured for production build');
     return null;
   }
@@ -53,22 +56,34 @@ export async function getAuthAdmin() {
     try {
       // For production, we need a proper service account
       // For now, we'll use a minimal config that won't break the build
-      const serviceAccount = {
-        projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL || `firebase-adminsdk@${process.env.FIREBASE_ADMIN_PROJECT_ID}.iam.gserviceaccount.com`,
-        privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n') || undefined,
-      };
+      let serviceAccount: admin.ServiceAccount | null = null;
 
-      // Only initialize if we have a private key
-      if (serviceAccount.privateKey) {
-        adminApp = admin.initializeApp({
-          credential: admin.credential.cert(serviceAccount),
-        });
-        console.log('Firebase Admin initialized successfully');
-      } else {
-        console.warn('Firebase Admin private key not provided');
-        return null;
+      if (process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
+        try {
+          const raw = fs.readFileSync(process.env.FIREBASE_SERVICE_ACCOUNT_PATH, 'utf8');
+          serviceAccount = JSON.parse(raw);
+        } catch (err) {
+          console.error('Failed to read service account file:', err);
+        }
       }
+
+      // Fallback to env-var based credentials
+      if (!serviceAccount) {
+        if (!process.env.FIREBASE_ADMIN_PRIVATE_KEY) {
+          console.warn('Firebase Admin private key not provided');
+          return null;
+        }
+        serviceAccount = {
+          projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
+          clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL || `firebase-adminsdk@${process.env.FIREBASE_ADMIN_PROJECT_ID}.iam.gserviceaccount.com`,
+          privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        } as admin.ServiceAccount;
+      }
+
+      adminApp = admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+      console.log('Firebase Admin initialized successfully');
     } catch (error) {
       console.error('Error initializing Firebase Admin:', error);
       return null;

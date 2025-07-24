@@ -5,6 +5,18 @@ import { rateLimiters } from '@/lib/rate-limit';
 import { getAuthAdmin } from '@/lib/firebase-admin';
 
 export async function GET(req: NextRequest) {
-  // TEMPORARILY DISABLED - Firebase Admin not configured
-  return NextResponse.json({ role: null }, { status: 200 });
+  // Apply rate limiting
+  const limited = await rateLimiters.api(req);
+  if (limited) return limited;
+
+  // Verify Firebase ID token
+  const user = await verifyAuthToken(req);
+  if (!user || !user.email) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Fetch role from custom claims
+  const role = await getUserRole(user.email);
+
+  return NextResponse.json({ role }, { status: 200 });
 }
