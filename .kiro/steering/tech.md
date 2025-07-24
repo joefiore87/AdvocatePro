@@ -2,33 +2,58 @@
 inclusion: always
 ---
 
-# Technical Implementation Guidelines
+# Special Education Advocacy Toolkit - Development Guidelines
 
-## Stack Requirements
+## Product Context
+A Next.js web application helping parents advocate for children with special education needs through letter generation, profile management, and educational resources.
+
+## Core Technical Stack
 - **Next.js 15.3.3**: App Router only, server components by default
 - **TypeScript**: Strict mode enabled, all code must be typed
 - **Tailwind CSS**: Only styling method - no inline styles or CSS modules
-- **Firebase Auth**: Authentication via `src/lib/firebase.ts`
+- **Firebase**: Authentication (`src/lib/firebase.ts`) and Firestore
 - **Stripe**: Payment processing in `src/app/api/stripe/`
 - **shadcn/ui**: UI components from `src/components/ui/`
+- **Genkit**: AI features in `src/ai/`
+
+## Privacy-First Architecture
+- **Sensitive Data**: Store user profiles in localStorage with encryption, never transmit without explicit consent
+- **Cloud Storage**: Firebase only for user ID and subscription status
+- **Data Export**: Implement JSON/PDF export functionality
+- **Local Processing**: Letter generation and profile merging client-side only
 
 ## Mandatory Code Patterns
 
-### Component Rules
-- Server components by default, add `"use client"` only when necessary
-- All props must have TypeScript interfaces
-- UI primitives go in `src/components/ui/`
-- Feature components in `src/components/` with descriptive names
-- Admin components in `src/components/admin/`
-- Always implement error boundaries for complex components
+### Component Structure
+```typescript
+// Server component (default)
+interface ComponentProps {
+  children: React.ReactNode;
+  data: UserProfile;
+}
+
+export default function Component({ children, data }: ComponentProps) {
+  return <div className="space-y-4">{children}</div>;
+}
+
+// Client component (when needed)
+"use client";
+import { useState } from 'react';
+```
 
 ### API Route Standards
 ```typescript
-// Required pattern for all API routes
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
+const schema = z.object({
+  // Define schema
+});
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const validatedData = schema.parse(body); // Always use Zod
+    const validatedData = schema.parse(body);
     // Implementation
     return NextResponse.json({ success: true, data });
   } catch (error) {
@@ -37,54 +62,60 @@ export async function POST(request: Request) {
 }
 ```
 
-### File Naming Conventions
-- API routes: `src/app/api/[feature]/route.ts`
-- Pages: `src/app/[route]/page.tsx`
-- Layouts: `src/app/[route]/layout.tsx`
-- Types: `src/lib/types.ts` or co-located `types.ts`
-- Utilities: `src/lib/utils.ts`
+### File Organization
+- **Components**: `src/components/ui/` (primitives), `src/components/` (features), `src/components/admin/` (admin)
+- **API Routes**: `src/app/api/[feature]/route.ts`
+- **Pages**: `src/app/[route]/page.tsx`
+- **Types**: `src/lib/types.ts` or co-located
+- **Hooks**: `src/hooks/use-[feature].tsx`
 
-### State Management Rules
-- Use React Context for global state (reference `src/hooks/use-auth.tsx`)
-- Custom hooks in `src/hooks/` for shared logic
-- localStorage only for user preferences
-- Firebase for persistent user data
-- Never store sensitive data in client state
-
-### Import Organization
+### Import Order
 ```typescript
-// 1. React/Next.js imports
+// 1. React/Next.js
 import { NextResponse } from 'next/server';
-// 2. Third-party libraries
+// 2. Third-party
 import { z } from 'zod';
-// 3. Internal imports (absolute paths)
+// 3. Internal (absolute paths)
 import { auth } from '@/lib/firebase';
 import type { UserProfile } from '@/lib/types';
 ```
 
-## Required Validations
-- All API inputs must use Zod schemas
-- Client-side form validation with react-hook-form
-- Environment variables must be validated at startup
-- All user inputs sanitized before database storage
+## Content & Language Guidelines
+- **Person-First Language**: "children with disabilities" not "disabled children"
+- **Tone**: Supportive, empowering, professional but approachable
+- **Legal Boundaries**: Provide information, never legal advice
+- **Accessibility**: WCAG AA compliance required
 
-## Error Handling Standards
-- API routes: Return consistent JSON error format
-- Components: Use error boundaries and fallback UI
-- Async operations: Always handle loading and error states
-- User feedback: Use toast notifications from `src/hooks/use-toast.ts`
+## Security & Validation
+- **Input Validation**: All API inputs use Zod schemas
+- **Authentication**: Firebase Auth with middleware protection
+- **Rate Limiting**: All public API endpoints
+- **Data Sanitization**: All user inputs before storage
+- **Stripe Security**: Webhook signature verification required
 
-## Security Requirements
-- Protected routes must use authentication middleware
-- Rate limiting on all public API endpoints
-- Input sanitization for all user data
-- HTTPS only in production
-- Stripe webhooks must verify signatures
+## Error Handling
+- **API Routes**: Consistent JSON error format with proper status codes
+- **Components**: Error boundaries with fallback UI
+- **Async Operations**: Loading and error states for all operations
+- **User Feedback**: Toast notifications via `src/hooks/use-toast.ts`
 
-## Development Workflow
+## State Management
+- **Global State**: React Context (see `src/hooks/use-auth.tsx`)
+- **Local State**: Custom hooks in `src/hooks/`
+- **Persistence**: localStorage for preferences, Firebase for minimal user data
+- **Sensitive Data**: Never store in client state or cloud without encryption
+
+## Development Commands
 ```bash
 npm run dev          # Local development
-npm run typecheck    # Before any commit
+npm run typecheck    # Required before commits
 npm run lint         # Code quality check
 firebase deploy      # Production deployment
+```
+
+## Required Environment Variables
+```
+STRIPE_SECRET_KEY
+NEXT_PUBLIC_FIREBASE_*
+GENKIT_API_KEY
 ```
