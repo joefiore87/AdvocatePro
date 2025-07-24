@@ -1,19 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/use-auth';
-import { ContentCategory } from '@/lib/content-types';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '../../../hooks/use-auth';
+import { ContentCategory } from '../../../lib/content-types';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Input } from '../../../components/ui/input';
+import { Button } from '../../../components/ui/button';
+import { Textarea } from '../../../components/ui/textarea';
+import { useToast } from '../../../hooks/use-toast';
 import { AlertCircle, Loader2, RefreshCw, Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ErrorBoundary } from '@/components/ui/error-boundary';
-import { ContentSkeleton, Skeleton } from '@/components/ui/skeleton-loader';
+import { Alert, AlertDescription, AlertTitle } from '../../../components/ui/alert';
+import { ErrorBoundary } from '../../../components/ui/error-boundary';
+import { ContentSkeleton, Skeleton } from '../../../components/ui/skeleton-loader';
 
 function ContentAdminPage() {
   const { user, loading: authLoading } = useAuth();
