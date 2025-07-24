@@ -78,4 +78,19 @@ export async function getAuthAdmin() {
   return adminApp ? adminApp.auth() : null;
 }
 
+// Helper to obtain Firestore instance (after Admin initialization)
+export async function getFirestoreAdmin() {
+  // Ensure Admin SDK is initialized
+  const auth = await getAuthAdmin();
+  if (!auth) {
+    return null;
+  }
+  try {
+    return admin.firestore();
+  } catch (error) {
+    console.error('Error obtaining Firestore admin instance:', error);
+    return null;
+  }
+}
+
 export default firebaseApp;

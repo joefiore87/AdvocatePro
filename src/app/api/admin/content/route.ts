@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTransformedContent } from '@/lib/server/content-service';
-import { verifyAdminAccess } from '@/lib/auth-middleware';
+import { requireAdminAuth } from '@/lib/auth-middleware';
 import { rateLimiters } from '@/lib/rate-limit';
 import { getAuthAdmin } from '@/lib/firebase-admin';
 

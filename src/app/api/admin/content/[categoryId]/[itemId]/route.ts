@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminAccess } from '@/lib/auth-middleware';
+import { requireAdminAuth } from '@/lib/auth-middleware';
 import { rateLimiters } from '@/lib/rate-limit';
 import { updateContentItem, getContentCategory } from '@/lib/server/content-service';
 import { ContentItem } from '@/lib/content-types';

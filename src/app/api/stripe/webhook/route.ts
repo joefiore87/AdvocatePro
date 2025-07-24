@@ -1,19 +1,23 @@
-import { stripe } from '@/lib/stripe';
-import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
-import { getAdminFirestore } from '@/lib/firebase-admin-config';
+import { NextRequest, NextResponse } from 'next/server';
+import Stripe from 'stripe';
+import { getFirestoreAdmin } from '@/lib/firebase-admin';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2024-06-20',
+});
 
 interface SubscriptionData {
   customerId: string;
   email: string;
-  purchaseDate: string;
-  expirationDate: string;
-  active: boolean;
+  subscriptionId: string;
+  status: string;
+  currentPeriodEnd: Date;
+  priceId: string;
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const body = await req.text();
-  const signature = headers().get('stripe-signature') as string;
+  const signature = req.headers.get('stripe-signature') as string;
   
   let event;
   
@@ -23,54 +27,68 @@ export async function POST(req: Request) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (error: any) {
-    console.error(`Webhook Error: ${error.message}`);
-    return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
-  }
-
-  // Handle successful checkout completion
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
     
-    try {
-      // Get customer details
-      const customer = await stripe.customers.retrieve(session.customer as string);
-      
-      if (!customer || customer.deleted || !customer.email) {
-        throw new Error('Customer email not found');
-      }
-      
-      // Calculate expiration date (1 year from now)
-      const purchaseDate = new Date();
-      const expirationDate = new Date(purchaseDate);
-      expirationDate.setFullYear(expirationDate.getFullYear() + 1);
-      
-      // Get Firestore instance
-      const db = getAdminFirestore();
-      if (!db) {
-        console.error('Firebase Admin not initialized - subscription not saved');
-        // Still return 200 to acknowledge receipt
-        return new NextResponse('Webhook received but Firebase Admin not configured', { status: 200 });
-      }
-      
-      // Store in Firestore
-      const subscriptionData: SubscriptionData = {
-        customerId: customer.id,
-        email: customer.email,
-        purchaseDate: purchaseDate.toISOString(),
-        expirationDate: expirationDate.toISOString(),
-        active: true
-      };
-      
-      await db.collection('subscriptions').doc(customer.email).set(subscriptionData);
-      
-      console.log(`Subscription created for ${customer.email}, expires on ${expirationDate.toDateString()}`);
-    } catch (error) {
-      console.error('Error processing webhook:', error);
-      // Return 200 to prevent Stripe from retrying
-      return new NextResponse('Webhook error', { status: 200 });
+    const firestore = await getFirestoreAdmin();
+    if (!firestore) {
+      console.error('Firestore not initialized');
+      return NextResponse.json(
+        { error: 'Service unavailable' },
+        { status: 503 }
+      );
     }
+    
+    // Handle the event
+    switch (event.type) {
+      case 'customer.subscription.created':
+      case 'customer.subscription.updated': {
+        const subscription = event.data.object as Stripe.Subscription;
+        const customer = await stripe.customers.retrieve(subscription.customer as string);
+        
+        if (!('email' in customer)) {
+          throw new Error('Customer email not found');
+        }
+        
+        const subscriptionData: SubscriptionData = {
+          customerId: subscription.customer as string,
+          email: customer.email!,
+          subscriptionId: subscription.id,
+          status: subscription.status,
+          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+          priceId: subscription.items.data[0]?.price.id || '',
+        };
+        
+        await firestore
+          .collection('subscriptions')
+          .doc(customer.email!)
+          .set(subscriptionData);
+        
+        break;
+      }
+      
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object as Stripe.Subscription;
+        const customer = await stripe.customers.retrieve(subscription.customer as string);
+        
+        if ('email' in customer && customer.email) {
+          await firestore
+            .collection('subscriptions')
+            .doc(customer.email)
+            .update({ status: 'canceled' });
+        }
+        
+        break;
+      }
+      
+      default:
+        console.log(`Unhandled event type: ${event.type}`);
+    }
+    
+    return NextResponse.json({ received: true });
+  } catch (error) {
+    console.error('Stripe webhook error:', error);
+    return NextResponse.json(
+      { error: 'Webhook processing failed' },
+      { status: 400 }
+    );
   }
-
-  return new NextResponse('Webhook processed', { status: 200 });
 }

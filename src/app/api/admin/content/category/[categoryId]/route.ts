@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getContentCategory } from '@/lib/server/content-service';
-import { verifyAdminAccess } from '@/lib/auth-middleware';
+import { requireAdminAuth } from '@/lib/auth-middleware';
 import { rateLimiters } from '@/lib/rate-limit';
 
 export async function GET(

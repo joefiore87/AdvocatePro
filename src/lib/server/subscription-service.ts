@@ -1,22 +1,24 @@
-import { getAdminFirestore } from '@/lib/firebase-admin-config';
+// Subscription service utilities leveraging consolidated Firebase Admin SDK
+import { getFirestoreAdmin } from '@/lib/firebase-admin';
 
 export interface SubscriptionData {
   customerId: string;
   email: string;
-  purchaseDate: string;
-  expirationDate: string;
-  active: boolean;
+  subscriptionId: string;
+  status: string; // e.g. active, canceled, past_due
+  currentPeriodEnd: Date;
+  priceId: string;
 }
 
 /**
  * Check if a user has active access
  * Server-side only function
  */
-export async function checkUserAccess(email: string): Promise<boolean> {
+export async function hasValidSubscription(email: string): Promise<boolean> {
   try {
     if (!email) return false;
     
-    const db = getAdminFirestore();
+    const db = await getFirestoreAdmin();
     if (!db) {
       console.error('Firebase Admin not initialized');
       return false;
@@ -28,11 +30,13 @@ export async function checkUserAccess(email: string): Promise<boolean> {
       return false;
     }
     
-    const subscription = subscriptionDoc.data() as SubscriptionData;
+    const sub = subscriptionDoc.data() as SubscriptionData;
     const now = new Date();
-    const expirationDate = new Date(subscription.expirationDate);
+    const periodEnd = sub.currentPeriodEnd instanceof Date
+      ? sub.currentPeriodEnd
+      : (sub.currentPeriodEnd as any).toDate?.() ?? new Date(sub.currentPeriodEnd);
     
-    return subscription.active && now < expirationDate;
+    return sub.status === 'active' && periodEnd > now;
   } catch (error) {
     console.error('Error checking user access:', error);
     return false;
@@ -47,7 +51,7 @@ export async function getUserSubscription(email: string): Promise<SubscriptionDa
   try {
     if (!email) return null;
     
-    const db = getAdminFirestore();
+    const db = await getFirestoreAdmin();
     if (!db) {
       console.error('Firebase Admin not initialized');
       return null;
@@ -72,7 +76,7 @@ export async function getUserSubscription(email: string): Promise<SubscriptionDa
  */
 export async function createOrUpdateSubscription(data: SubscriptionData): Promise<void> {
   try {
-    const db = getAdminFirestore();
+    const db = await getFirestoreAdmin();
     if (!db) {
       throw new Error('Firebase Admin not initialized');
     }

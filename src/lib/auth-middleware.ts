@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminAuth } from './firebase-admin-config';
+import { getAuthAdmin } from './firebase-admin';
 
 interface AuthUser {
   uid: string;
@@ -8,25 +8,23 @@ interface AuthUser {
 
 /**
  * Verify the Firebase ID token from the request
+ * Returns the decoded token if valid, null otherwise
  */
 export async function verifyAuthToken(req: NextRequest): Promise<AuthUser | null> {
   try {
-    // Get the token from the Authorization header
     const authHeader = req.headers.get('Authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader?.startsWith('Bearer ')) {
       return null;
     }
-    
+
     const token = authHeader.split('Bearer ')[1];
-    if (!token) return null;
+    const auth = await getAuthAdmin();
     
-    const auth = getAdminAuth();
     if (!auth) {
       console.error('Firebase Admin not initialized');
       return null;
     }
-    
-    // Verify the token
+
     const decodedToken = await auth.verifyIdToken(token);
     
     return {
@@ -34,47 +32,50 @@ export async function verifyAuthToken(req: NextRequest): Promise<AuthUser | null
       email: decodedToken.email || ''
     };
   } catch (error) {
-    console.error('Error verifying auth token:', error);
+    console.error('Error verifying token:', error);
     return null;
   }
 }
 
 /**
- * Verify that the user is an admin
+ * Check if the user has admin role
  */
-export async function verifyAdminAccess(req: NextRequest): Promise<AuthUser | null> {
-  const user = await verifyAuthToken(req);
-  
-  if (!user || !user.email) {
-    return null;
-  }
-  
-  const auth = getAdminAuth();
-  if (!auth) {
-    console.error('Firebase Admin not initialized');
-    return null;
-  }
-  
+export async function isAdminUser(userId: string): Promise<boolean> {
   try {
-    const adminUser = await auth.getUser(user.uid);
-    const isUserAdmin = adminUser.customClaims?.role === 'admin';
-    
-    return isUserAdmin ? user : null;
+    const auth = await getAuthAdmin();
+    if (!auth) {
+      console.error('Firebase Admin not initialized');
+      return false;
+    }
+
+    const user = await auth.getUser(userId);
+    return user.customClaims?.role === 'admin';
   } catch (error) {
-    console.error('Error checking admin status:', error);
-    return null;
+    console.error('Error checking admin role:', error);
+    return false;
   }
 }
 
 /**
  * Middleware to protect admin routes
  */
-export async function adminAuthMiddleware(req: NextRequest) {
-  const user = await verifyAdminAccess(req);
+export async function requireAdminAuth(req: NextRequest): Promise<NextResponse | null> {
+  const user = await verifyAuthToken(req);
   
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json(
+      { error: 'Unauthorized' }, 
+      { status: 401 }
+    );
   }
-  
-  return NextResponse.next();
+
+  const isAdmin = await isAdminUser(user.uid);
+  if (!isAdmin) {
+    return NextResponse.json(
+      { error: 'Admin access required' }, 
+      { status: 403 }
+    );
+  }
+
+  return null;
 }

@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminAuth } from '@/lib/firebase-admin-config';
+import { getAuthAdmin } from '@/lib/firebase-admin';
 
 export async function GET(req: NextRequest) {
   try {
-    const authHeader = req.headers.get('authorization');
+    const authHeader = req.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json({ isAdmin: false, error: 'No auth token' }, { status: 401 });
     }
 
     const token = authHeader.split('Bearer ')[1];
-    const auth = getAdminAuth();
+    const auth = await getAuthAdmin();
     
     if (!auth) {
       console.error('Firebase Admin not initialized');

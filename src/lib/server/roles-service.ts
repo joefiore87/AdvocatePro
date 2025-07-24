@@ -1,9 +1,10 @@
-import { getAdminAuth } from '@/lib/firebase-admin-config';
+import { getAuthAdmin } from '@/lib/firebase-admin';
 
 export async function setUserRole(email: string, role: string) {
-  const auth = getAdminAuth();
+  const auth = await getAuthAdmin();
   if (!auth) {
-    throw new Error('Firebase Admin not initialized');
+    console.error('Firebase Admin not initialized');
+    return null;
   }
 
   try {
@@ -22,9 +23,10 @@ export async function setUserRole(email: string, role: string) {
 }
 
 export async function getUserRole(email: string): Promise<string | null> {
-  const auth = getAdminAuth();
+  const auth = await getAuthAdmin();
   if (!auth) {
-    throw new Error('Firebase Admin not initialized');
+    console.error('Firebase Admin not initialized');
+    return null;
   }
 
   try {
