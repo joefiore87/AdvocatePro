@@ -3,6 +3,11 @@ runConfig:
   memoryMiB: 512
   concurrency: 80
 
+build:
+  commands:
+    - npm ci --include=dev
+    - npm run build
+
 env:
   # Public environment variables
   - variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
