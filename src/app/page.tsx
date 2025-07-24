@@ -148,8 +148,8 @@ export default function Home() {
                 }
               </div>
               <div className="mt-6 space-x-4">
-                <Link href="#" className="text-primary hover:underline">See a sample evaluation request letter</Link>
-                <Link href="#" className="text-primary hover:underline">See a sample IEP meeting request letter</Link>
+                <Link href="/samples/evaluation-request" className="text-primary hover:underline">See a sample evaluation request letter</Link>
+                <Link href="/samples/iep-meeting-request" className="text-primary hover:underline">See a sample IEP meeting request letter</Link>
               </div>
             </div>
             <div className="bg-muted p-8 rounded-lg">

@@ -98,24 +98,28 @@ function PurchasePage() {
       setIsCreatingCheckout(true);
       setCheckoutError(null);
       
-      // Get auth token
-      const token = await user.getIdToken();
-      
-      // Create checkout session
-      const response = await fetch('/api/stripe/create-checkout-session', {
+      // Create checkout session with user info
+      const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({
+          userId: user.uid,
+          email: user.email
+        })
       });
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create checkout session');
+        throw new Error(errorData.error?.message || 'Failed to create checkout session');
       }
       
       const { url } = await response.json();
+      
+      if (!url) {
+        throw new Error('No checkout URL received');
+      }
       
       // Redirect to checkout
       window.location.href = url;

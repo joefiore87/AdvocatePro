@@ -1,4 +1,3 @@
-
 import { stripe } from '@/lib/stripe';
 import { NextResponse } from 'next/server';
 
@@ -10,12 +9,13 @@ export async function POST(req: Request) {
     if (!userId || !email) {
       return NextResponse.json({ error: { message: 'Missing userId or email' } }, { status: 400 });
     }
-     if (!appUrl) {
+    
+    if (!appUrl) {
       throw new Error('NEXT_PUBLIC_APP_URL is not set in environment variables');
     }
     
     if (!process.env.STRIPE_PRICE_ID) {
-        throw new Error('STRIPE_PRICE_ID is not set in environment variables');
+      throw new Error('STRIPE_PRICE_ID is not set in environment variables');
     }
 
     const priceId = process.env.STRIPE_PRICE_ID;
@@ -28,16 +28,16 @@ export async function POST(req: Request) {
           quantity: 1,
         },
       ],
-      mode: 'subscription',
-      success_url: `${appUrl}/toolkit?session_id={CHECKOUT_SESSION_ID}`,
+      mode: 'payment', // Changed from 'subscription' to 'payment' for one-time purchase
+      success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/purchase`,
       customer_email: email,
       client_reference_id: userId,
-      subscription_data: {
-        metadata: {
-            firebaseUid: userId
-        }
-      }
+      metadata: {
+        firebaseUid: userId,
+        userEmail: email
+      },
+      allow_promotion_codes: true,
     });
 
     return NextResponse.json({ sessionId: session.id, url: session.url });

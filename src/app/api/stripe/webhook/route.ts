@@ -6,13 +6,15 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
 });
 
-interface SubscriptionData {
+interface PaymentData {
   customerId: string;
   email: string;
-  subscriptionId: string;
-  status: string;
-  currentPeriodEnd: Date;
-  priceId: string;
+  sessionId: string;
+  paymentStatus: string;
+  purchaseDate: Date;
+  expirationDate: Date;
+  amountPaid: number;
+  firebaseUid?: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -39,43 +41,48 @@ export async function POST(req: NextRequest) {
     
     // Handle the event
     switch (event.type) {
-      case 'customer.subscription.created':
-      case 'customer.subscription.updated': {
-        const subscription = event.data.object as Stripe.Subscription;
-        const customer = await stripe.customers.retrieve(subscription.customer as string);
+      case 'checkout.session.completed': {
+        const session = event.data.object as Stripe.Checkout.Session;
         
-        if (!('email' in customer)) {
-          throw new Error('Customer email not found');
+        if (session.payment_status === 'paid') {
+          const customerEmail = session.customer_details?.email;
+          
+          if (!customerEmail) {
+            console.error('No customer email found in session');
+            break;
+          }
+          
+          // Calculate expiration date (1 year from purchase)
+          const purchaseDate = new Date(session.created * 1000);
+          const expirationDate = new Date(purchaseDate);
+          expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+          
+          const paymentData: PaymentData = {
+            customerId: session.customer?.toString() || session.client_reference_id || 'unknown',
+            email: customerEmail,
+            sessionId: session.id,
+            paymentStatus: session.payment_status,
+            purchaseDate: purchaseDate,
+            expirationDate: expirationDate,
+            amountPaid: session.amount_total || 0,
+            firebaseUid: session.metadata?.firebaseUid || session.client_reference_id || undefined
+          };
+          
+          // Store payment record in Firestore
+          await firestore
+            .collection('payments')
+            .doc(customerEmail)
+            .set(paymentData);
+          
+          console.log(`Payment processed for ${customerEmail}`);
         }
-        
-        const subscriptionData: SubscriptionData = {
-          customerId: subscription.customer as string,
-          email: customer.email!,
-          subscriptionId: subscription.id,
-          status: subscription.status,
-          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-          priceId: subscription.items.data[0]?.price.id || '',
-        };
-        
-        await firestore
-          .collection('subscriptions')
-          .doc(customer.email!)
-          .set(subscriptionData);
         
         break;
       }
       
-      case 'customer.subscription.deleted': {
-        const subscription = event.data.object as Stripe.Subscription;
-        const customer = await stripe.customers.retrieve(subscription.customer as string);
-        
-        if ('email' in customer && customer.email) {
-          await firestore
-            .collection('subscriptions')
-            .doc(customer.email)
-            .update({ status: 'canceled' });
-        }
-        
+      case 'payment_intent.succeeded': {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent;
+        console.log(`Payment succeeded: ${paymentIntent.id}`);
         break;
       }
       

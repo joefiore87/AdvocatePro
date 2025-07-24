@@ -1,11 +1,5 @@
-import { getFirestore } from 'firebase-admin/firestore';
-import { initializeFirebaseAdmin } from '../firebase-admin-init';
-import { getApp } from 'firebase-admin/app';
+import { getFirestoreAdmin } from '../firebase-admin';
 import { ContentCategory, ContentItem, DEFAULT_CONTENT } from '../content-types';
-
-initializeFirebaseAdmin();
-// Use the admin app initialized in auth-middleware.ts
-const db = getFirestore(getApp());
 
 /**
  * Initialize content in Firestore if it doesn't exist
@@ -13,6 +7,12 @@ const db = getFirestore(getApp());
  */
 export async function initializeContent(): Promise<boolean> {
   try {
+    const db = await getFirestoreAdmin();
+    if (!db) {
+      console.error('Firestore admin not available');
+      return false;
+    }
+
     // Check if content already exists
     const contentRef = db.collection('system').doc('content');
     const contentSnap = await contentRef.get();
@@ -56,6 +56,13 @@ export async function initializeContent(): Promise<boolean> {
  */
 export async function getAllContent(limit = 10): Promise<Record<string, ContentCategory>> {
   try {
+    const db = await getFirestoreAdmin();
+    if (!db) {
+      console.error('Firestore admin not available');
+      // Return default content as fallback
+      return DEFAULT_CONTENT;
+    }
+
     const categoriesRef = db.collection('content').limit(limit);
     const categoriesSnap = await categoriesRef.get();
     
@@ -90,6 +97,13 @@ export async function getAllContent(limit = 10): Promise<Record<string, ContentC
  */
 export async function getContentCategory(categoryId: string): Promise<ContentCategory | null> {
   try {
+    const db = await getFirestoreAdmin();
+    if (!db) {
+      console.error('Firestore admin not available');
+      // Return default content as fallback
+      return DEFAULT_CONTENT[categoryId as keyof typeof DEFAULT_CONTENT] || null;
+    }
+
     const categoryRef = db.collection('content').doc(categoryId);
     const categorySnap = await categoryRef.get();
     
@@ -122,6 +136,12 @@ export async function getContentCategory(categoryId: string): Promise<ContentCat
  */
 export async function updateContentItem(categoryId: string, itemId: string, value: string, updatedBy?: string): Promise<boolean> {
   try {
+    const db = await getFirestoreAdmin();
+    if (!db) {
+      console.error('Firestore admin not available');
+      return false;
+    }
+
     const itemRef = db.collection('content').doc(categoryId).collection('items').doc(itemId);
     const itemSnap = await itemRef.get();
     
@@ -180,7 +200,7 @@ export async function getTransformedContent(): Promise<Record<string, string>> {
       transformedContent['whats-included-title'] = "What's Included";
       
       const featuresList = allContent.features.items.map(item => item.value);
-      transformedContent['features-list'] = featuresList.join('\\n');
+      transformedContent['features-list'] = featuresList.join('\n');
     }
     
     return transformedContent;
@@ -193,7 +213,7 @@ export async function getTransformedContent(): Promise<Record<string, string>> {
       'homepage-description': "Create clear, professional advocacy letters using what you already know about your child. Everything stays private on your computer—no uploading personal information anywhere.",
       'annual-pricing': "$29.99/year",
       'whats-included-title': "What's Included",
-      'features-list': "20 letter templates for different situations (evaluation requests, meeting requests, follow-ups, etc.)\\n7 learning modules explaining special education processes and parent rights\\nWorks offline - install once, use anywhere\\nUpdates included when new templates are added"
+      'features-list': "20 letter templates for different situations (evaluation requests, meeting requests, follow-ups, etc.)\n7 learning modules explaining special education processes and parent rights\nWorks offline - install once, use anywhere\nUpdates included when new templates are added"
     };
     
     return defaultContent;

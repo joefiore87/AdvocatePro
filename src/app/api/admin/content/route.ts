@@ -1,24 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllContent } from '@/lib/server/content-service';
-import { requireAdminAuth } from '@/lib/auth-middleware';
+import { getTransformedContent } from '@/lib/server/content-service';
 import { rateLimiters } from '@/lib/rate-limit';
-import { getAuthAdmin } from '@/lib/firebase-admin';
 
 export async function GET(req: NextRequest) {
-    // Rate limit
+  // Rate limit
   const limited = await rateLimiters.admin(req);
   if (limited) return limited;
 
-  // Ensure Firebase Admin initialized
-  const auth = await getAuthAdmin();
-  if (!auth) {
-    return NextResponse.json({ error: 'Service unavailable' }, { status: 503 });
+  try {
+    const content = await getTransformedContent();
+    return NextResponse.json({ content });
+  } catch (error) {
+    console.error('Error fetching content:', error);
+    return NextResponse.json({ error: 'Failed to fetch content' }, { status: 500 });
   }
-
-  // Verify admin token
-  const authResp = await requireAdminAuth(req);
-  if (authResp) return authResp;
-
-  const content = await getAllContent();
-  return NextResponse.json({ content });
 }
