@@ -5,8 +5,27 @@ import { rateLimiters } from '@/lib/rate-limit';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ categoryId: string }> }
+  { params }: { params: { categoryId: string } }
 ) {
-  // TEMPORARILY DISABLED - Firebase Admin not configured
-  return NextResponse.json({ error: 'Admin features temporarily disabled' }, { status: 503 });
+  // Rate-limit first
+  const limited = await rateLimiters.admin(req);
+  if (limited) return limited;
+
+  // Ensure Firebase Admin is ready
+  const auth = await (await import('@/lib/firebase-admin')).getAuthAdmin();
+  if (!auth) {
+    return NextResponse.json({ error: 'Service unavailable' }, { status: 503 });
+  }
+
+  // Verify token and admin role
+  const authResp = await requireAdminAuth(req);
+  if (authResp) return authResp;
+
+  const { categoryId } = params;
+  const category = await getContentCategory(categoryId);
+  if (!category) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
+  return NextResponse.json({ category });
 }

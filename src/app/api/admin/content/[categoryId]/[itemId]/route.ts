@@ -18,8 +18,46 @@ interface UpdateContentResponse {
 // Ensure Firebase Admin is initialized
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ categoryId: string; itemId: string }> }
+  context: { params: { categoryId: string; itemId: string } }
 ) {
-  // TEMPORARILY DISABLED - Firebase Admin not configured
-  return NextResponse.json({ error: 'Admin features temporarily disabled' }, { status: 503 });
+  const { categoryId, itemId } = context.params;
+    // Rate-limit
+  const limited = await rateLimiters.admin(req);
+  if (limited) return limited;
+
+  // Ensure Firebase Admin initialized
+  const auth = await getAuthAdmin();
+  if (!auth) {
+    return NextResponse.json({ error: 'Service unavailable' }, { status: 503 });
+  }
+
+  // Verify admin token
+  const authResp = await requireAdminAuth(req);
+  if (authResp) return authResp;
+
+
+
+  // Validate request body
+  let body: UpdateContentRequest;
+  try {
+    body = await req.json();
+    if (!body?.value) throw new Error('Missing value');
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+  }
+
+  const success = await updateContentItem(categoryId, itemId, body.value, 'admin');
+  if (!success) {
+    return NextResponse.json({ success: false }, { status: 500 });
+  }
+
+  // Return updated item for convenience
+  const updatedCategory = await getContentCategory(categoryId);
+  const updatedItem = updatedCategory?.items.find(i => i.id === itemId);
+
+  const resp: UpdateContentResponse = {
+    success: true,
+    item: updatedItem,
+  };
+  return NextResponse.json(resp);
 }
