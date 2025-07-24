@@ -1,0 +1,2215 @@
+"""
+✨ `Child_KeyOutput` returns the primary key fields of table type `Child`.
+
+It has the same format as `Child_Key`, but is only used as mutation return value.
+"""
+scalar Child_KeyOutput
+"""
+✨ `Event_KeyOutput` returns the primary key fields of table type `Event`.
+
+It has the same format as `Event_Key`, but is only used as mutation return value.
+"""
+scalar Event_KeyOutput
+"""
+✨ `HealthRecord_KeyOutput` returns the primary key fields of table type `HealthRecord`.
+
+It has the same format as `HealthRecord_Key`, but is only used as mutation return value.
+"""
+scalar HealthRecord_KeyOutput
+"""
+✨ `ShoppingList_KeyOutput` returns the primary key fields of table type `ShoppingList`.
+
+It has the same format as `ShoppingList_Key`, but is only used as mutation return value.
+"""
+scalar ShoppingList_KeyOutput
+"""
+✨ `ShoppingListItem_KeyOutput` returns the primary key fields of table type `ShoppingListItem`.
+
+It has the same format as `ShoppingListItem_Key`, but is only used as mutation return value.
+"""
+scalar ShoppingListItem_KeyOutput
+"""
+✨ `Task_KeyOutput` returns the primary key fields of table type `Task`.
+
+It has the same format as `Task_Key`, but is only used as mutation return value.
+"""
+scalar Task_KeyOutput
+"""
+✨ `User_KeyOutput` returns the primary key fields of table type `User`.
+
+It has the same format as `User_Key`, but is only used as mutation return value.
+"""
+scalar User_KeyOutput
+"""
+✨ Generated data input type for table 'Child'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Child_Data {
+  """
+  ✨ Generated from Field `Child`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Child`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Child`.`userId` of type `UUID!`
+  """
+  userId: UUID
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `Child`.`userId` of type `UUID!`)
+  """
+  userId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Child`.`user` of type `User!`
+  """
+  user: User_Key
+  """
+  ✨ Generated from Field `Child`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `Child`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `Child`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `Child`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Child`.`dateOfBirth` of type `Date`
+  """
+  dateOfBirth: Date
+  """
+  ✨ `_date` server value variant of `dateOfBirth` (✨ Generated from Field `Child`.`dateOfBirth` of type `Date`)
+  """
+  dateOfBirth_date: Date_Relative
+  """
+  ✨ `_expr` server value variant of `dateOfBirth` (✨ Generated from Field `Child`.`dateOfBirth` of type `Date`)
+  """
+  dateOfBirth_expr: Date_Expr
+  """
+  ✨ `_update` server value variant of `dateOfBirth` (✨ Generated from Field `Child`.`dateOfBirth` of type `Date`)
+  """
+  dateOfBirth_update: [Date_Update!]
+  """
+  ✨ Generated from Field `Child`.`name` of type `String!`
+  """
+  name: String
+  """
+  ✨ `_expr` server value variant of `name` (✨ Generated from Field `Child`.`name` of type `String!`)
+  """
+  name_expr: String_Expr
+  """
+  ✨ Generated from Field `Child`.`notes` of type `String`
+  """
+  notes: String
+  """
+  ✨ `_expr` server value variant of `notes` (✨ Generated from Field `Child`.`notes` of type `String`)
+  """
+  notes_expr: String_Expr
+}
+"""
+✨ Generated filter input type for table 'Child'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Child_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Child_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Child_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Child_Filter!]
+  """
+  ✨ Generated from Field `Child`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Child`.`userId` of type `UUID!`
+  """
+  userId: UUID_Filter
+  """
+  ✨ Generated from Field `Child`.`user` of type `User!`
+  """
+  user: User_Filter
+  """
+  ✨ Generated from Field `Child`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `Child`.`dateOfBirth` of type `Date`
+  """
+  dateOfBirth: Date_Filter
+  """
+  ✨ Generated from Field `Child`.`name` of type `String!`
+  """
+  name: String_Filter
+  """
+  ✨ Generated from Field `Child`.`notes` of type `String`
+  """
+  notes: String_Filter
+  """
+  ✨ Generated from Field `Child`.`events_on_child` of type `[Event!]!`
+  """
+  events_on_child: Event_ListFilter
+  """
+  ✨ Generated from Field `Child`.`healthRecords_on_child` of type `[HealthRecord!]!`
+  """
+  healthRecords_on_child: HealthRecord_ListFilter
+  """
+  ✨ Generated from Field `Child`.`tasks_on_child` of type `[Task!]!`
+  """
+  tasks_on_child: Task_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'Child'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Child_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Child_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Child_Filter
+}
+"""
+✨ Generated having input type for table 'Child'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Child_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Child_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Child_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Child_Having!]
+  """
+  ✨ Generated from Field `Child`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Child`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `Child`.`dateOfBirth_count` of type `Int!`
+  """
+  dateOfBirth_count: Int_Filter
+  """
+  ✨ Generated from Field `Child`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Child`.`name_count` of type `Int!`
+  """
+  name_count: Int_Filter
+  """
+  ✨ Generated from Field `Child`.`notes_count` of type `Int!`
+  """
+  notes_count: Int_Filter
+  """
+  ✨ Generated from Field `Child`.`userId_count` of type `Int!`
+  """
+  userId_count: Int_Filter
+  """
+  ✨ Generated from Field `Child`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Child`.`dateOfBirth_min` of type `Date`
+  """
+  dateOfBirth_min: Date_Filter
+  """
+  ✨ Generated from Field `Child`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Child`.`dateOfBirth_max` of type `Date`
+  """
+  dateOfBirth_max: Date_Filter
+}
+"""
+✨ Generated key input type for table 'Child'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Child_Key {
+  """
+  ✨ Generated from Field `Child`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Child`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'Child'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Child_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Child_Filter
+}
+"""
+✨ Generated order input type for table 'Child'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Child_Order {
+  """
+  ✨ Generated from Field `Child`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Child`.`userId` of type `UUID!`
+  """
+  userId: OrderDirection
+  """
+  ✨ Generated from Field `Child`.`user` of type `User!`
+  """
+  user: User_Order
+  """
+  ✨ Generated from Field `Child`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `Child`.`dateOfBirth` of type `Date`
+  """
+  dateOfBirth: OrderDirection
+  """
+  ✨ Generated from Field `Child`.`name` of type `String!`
+  """
+  name: OrderDirection
+  """
+  ✨ Generated from Field `Child`.`notes` of type `String`
+  """
+  notes: OrderDirection
+}
+"""
+✨ Generated data input type for table 'Event'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Event_Data {
+  """
+  ✨ Generated from Field `Event`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Event`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Event`.`childId` of type `UUID`
+  """
+  childId: UUID
+  """
+  ✨ `_expr` server value variant of `childId` (✨ Generated from Field `Event`.`childId` of type `UUID`)
+  """
+  childId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Event`.`userId` of type `UUID!`
+  """
+  userId: UUID
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `Event`.`userId` of type `UUID!`)
+  """
+  userId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Event`.`child` of type `Child`
+  """
+  child: Child_Key
+  """
+  ✨ Generated from Field `Event`.`user` of type `User!`
+  """
+  user: User_Key
+  """
+  ✨ Generated from Field `Event`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `Event`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `Event`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `Event`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Event`.`description` of type `String`
+  """
+  description: String
+  """
+  ✨ `_expr` server value variant of `description` (✨ Generated from Field `Event`.`description` of type `String`)
+  """
+  description_expr: String_Expr
+  """
+  ✨ Generated from Field `Event`.`endTime` of type `Timestamp`
+  """
+  endTime: Timestamp
+  """
+  ✨ `_expr` server value variant of `endTime` (✨ Generated from Field `Event`.`endTime` of type `Timestamp`)
+  """
+  endTime_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `endTime` (✨ Generated from Field `Event`.`endTime` of type `Timestamp`)
+  """
+  endTime_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `endTime` (✨ Generated from Field `Event`.`endTime` of type `Timestamp`)
+  """
+  endTime_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Event`.`isCompleted` of type `Boolean`
+  """
+  isCompleted: Boolean
+  """
+  ✨ `_expr` server value variant of `isCompleted` (✨ Generated from Field `Event`.`isCompleted` of type `Boolean`)
+  """
+  isCompleted_expr: Boolean_Expr
+  """
+  ✨ Generated from Field `Event`.`location` of type `String`
+  """
+  location: String
+  """
+  ✨ `_expr` server value variant of `location` (✨ Generated from Field `Event`.`location` of type `String`)
+  """
+  location_expr: String_Expr
+  """
+  ✨ Generated from Field `Event`.`startTime` of type `Timestamp!`
+  """
+  startTime: Timestamp
+  """
+  ✨ `_expr` server value variant of `startTime` (✨ Generated from Field `Event`.`startTime` of type `Timestamp!`)
+  """
+  startTime_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `startTime` (✨ Generated from Field `Event`.`startTime` of type `Timestamp!`)
+  """
+  startTime_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `startTime` (✨ Generated from Field `Event`.`startTime` of type `Timestamp!`)
+  """
+  startTime_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Event`.`title` of type `String!`
+  """
+  title: String
+  """
+  ✨ `_expr` server value variant of `title` (✨ Generated from Field `Event`.`title` of type `String!`)
+  """
+  title_expr: String_Expr
+  """
+  ✨ Generated from Field `Event`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `updatedAt` (✨ Generated from Field `Event`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `updatedAt` (✨ Generated from Field `Event`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `updatedAt` (✨ Generated from Field `Event`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_update: [Timestamp_Update!]
+}
+"""
+✨ Generated filter input type for table 'Event'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Event_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Event_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Event_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Event_Filter!]
+  """
+  ✨ Generated from Field `Event`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Event`.`childId` of type `UUID`
+  """
+  childId: UUID_Filter
+  """
+  ✨ Generated from Field `Event`.`userId` of type `UUID!`
+  """
+  userId: UUID_Filter
+  """
+  ✨ Generated from Field `Event`.`child` of type `Child`
+  """
+  child: Child_Filter
+  """
+  ✨ Generated from Field `Event`.`user` of type `User!`
+  """
+  user: User_Filter
+  """
+  ✨ Generated from Field `Event`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `Event`.`description` of type `String`
+  """
+  description: String_Filter
+  """
+  ✨ Generated from Field `Event`.`endTime` of type `Timestamp`
+  """
+  endTime: Timestamp_Filter
+  """
+  ✨ Generated from Field `Event`.`isCompleted` of type `Boolean`
+  """
+  isCompleted: Boolean_Filter
+  """
+  ✨ Generated from Field `Event`.`location` of type `String`
+  """
+  location: String_Filter
+  """
+  ✨ Generated from Field `Event`.`startTime` of type `Timestamp!`
+  """
+  startTime: Timestamp_Filter
+  """
+  ✨ Generated from Field `Event`.`title` of type `String!`
+  """
+  title: String_Filter
+  """
+  ✨ Generated from Field `Event`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp_Filter
+}
+"""
+✨ Generated first-row input type for table 'Event'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Event_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Event_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Event_Filter
+}
+"""
+✨ Generated having input type for table 'Event'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Event_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Event_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Event_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Event_Having!]
+  """
+  ✨ Generated from Field `Event`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Event`.`childId_count` of type `Int!`
+  """
+  childId_count: Int_Filter
+  """
+  ✨ Generated from Field `Event`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `Event`.`description_count` of type `Int!`
+  """
+  description_count: Int_Filter
+  """
+  ✨ Generated from Field `Event`.`endTime_count` of type `Int!`
+  """
+  endTime_count: Int_Filter
+  """
+  ✨ Generated from Field `Event`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Event`.`isCompleted_count` of type `Int!`
+  """
+  isCompleted_count: Int_Filter
+  """
+  ✨ Generated from Field `Event`.`location_count` of type `Int!`
+  """
+  location_count: Int_Filter
+  """
+  ✨ Generated from Field `Event`.`startTime_count` of type `Int!`
+  """
+  startTime_count: Int_Filter
+  """
+  ✨ Generated from Field `Event`.`title_count` of type `Int!`
+  """
+  title_count: Int_Filter
+  """
+  ✨ Generated from Field `Event`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `Event`.`userId_count` of type `Int!`
+  """
+  userId_count: Int_Filter
+  """
+  ✨ Generated from Field `Event`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Event`.`endTime_min` of type `Timestamp`
+  """
+  endTime_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Event`.`startTime_min` of type `Timestamp`
+  """
+  startTime_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Event`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Event`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Event`.`endTime_max` of type `Timestamp`
+  """
+  endTime_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Event`.`startTime_max` of type `Timestamp`
+  """
+  startTime_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Event`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'Event'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Event_Key {
+  """
+  ✨ Generated from Field `Event`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Event`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'Event'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Event_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Event_Filter
+}
+"""
+✨ Generated order input type for table 'Event'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Event_Order {
+  """
+  ✨ Generated from Field `Event`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Event`.`childId` of type `UUID`
+  """
+  childId: OrderDirection
+  """
+  ✨ Generated from Field `Event`.`userId` of type `UUID!`
+  """
+  userId: OrderDirection
+  """
+  ✨ Generated from Field `Event`.`child` of type `Child`
+  """
+  child: Child_Order
+  """
+  ✨ Generated from Field `Event`.`user` of type `User!`
+  """
+  user: User_Order
+  """
+  ✨ Generated from Field `Event`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `Event`.`description` of type `String`
+  """
+  description: OrderDirection
+  """
+  ✨ Generated from Field `Event`.`endTime` of type `Timestamp`
+  """
+  endTime: OrderDirection
+  """
+  ✨ Generated from Field `Event`.`isCompleted` of type `Boolean`
+  """
+  isCompleted: OrderDirection
+  """
+  ✨ Generated from Field `Event`.`location` of type `String`
+  """
+  location: OrderDirection
+  """
+  ✨ Generated from Field `Event`.`startTime` of type `Timestamp!`
+  """
+  startTime: OrderDirection
+  """
+  ✨ Generated from Field `Event`.`title` of type `String!`
+  """
+  title: OrderDirection
+  """
+  ✨ Generated from Field `Event`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: OrderDirection
+}
+"""
+✨ Generated data input type for table 'HealthRecord'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input HealthRecord_Data {
+  """
+  ✨ Generated from Field `HealthRecord`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `HealthRecord`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `HealthRecord`.`childId` of type `UUID!`
+  """
+  childId: UUID
+  """
+  ✨ `_expr` server value variant of `childId` (✨ Generated from Field `HealthRecord`.`childId` of type `UUID!`)
+  """
+  childId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `HealthRecord`.`userId` of type `UUID!`
+  """
+  userId: UUID
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `HealthRecord`.`userId` of type `UUID!`)
+  """
+  userId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `HealthRecord`.`child` of type `Child!`
+  """
+  child: Child_Key
+  """
+  ✨ Generated from Field `HealthRecord`.`user` of type `User!`
+  """
+  user: User_Key
+  """
+  ✨ Generated from Field `HealthRecord`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `HealthRecord`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `HealthRecord`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `HealthRecord`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `HealthRecord`.`description` of type `String!`
+  """
+  description: String
+  """
+  ✨ `_expr` server value variant of `description` (✨ Generated from Field `HealthRecord`.`description` of type `String!`)
+  """
+  description_expr: String_Expr
+  """
+  ✨ Generated from Field `HealthRecord`.`notes` of type `String`
+  """
+  notes: String
+  """
+  ✨ `_expr` server value variant of `notes` (✨ Generated from Field `HealthRecord`.`notes` of type `String`)
+  """
+  notes_expr: String_Expr
+  """
+  ✨ Generated from Field `HealthRecord`.`recordDate` of type `Date!`
+  """
+  recordDate: Date
+  """
+  ✨ `_date` server value variant of `recordDate` (✨ Generated from Field `HealthRecord`.`recordDate` of type `Date!`)
+  """
+  recordDate_date: Date_Relative
+  """
+  ✨ `_expr` server value variant of `recordDate` (✨ Generated from Field `HealthRecord`.`recordDate` of type `Date!`)
+  """
+  recordDate_expr: Date_Expr
+  """
+  ✨ `_update` server value variant of `recordDate` (✨ Generated from Field `HealthRecord`.`recordDate` of type `Date!`)
+  """
+  recordDate_update: [Date_Update!]
+  """
+  ✨ Generated from Field `HealthRecord`.`recordType` of type `String!`
+  """
+  recordType: String
+  """
+  ✨ `_expr` server value variant of `recordType` (✨ Generated from Field `HealthRecord`.`recordType` of type `String!`)
+  """
+  recordType_expr: String_Expr
+  """
+  ✨ Generated from Field `HealthRecord`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `updatedAt` (✨ Generated from Field `HealthRecord`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `updatedAt` (✨ Generated from Field `HealthRecord`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `updatedAt` (✨ Generated from Field `HealthRecord`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_update: [Timestamp_Update!]
+}
+"""
+✨ Generated filter input type for table 'HealthRecord'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input HealthRecord_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [HealthRecord_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: HealthRecord_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [HealthRecord_Filter!]
+  """
+  ✨ Generated from Field `HealthRecord`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`childId` of type `UUID!`
+  """
+  childId: UUID_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`userId` of type `UUID!`
+  """
+  userId: UUID_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`child` of type `Child!`
+  """
+  child: Child_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`user` of type `User!`
+  """
+  user: User_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`description` of type `String!`
+  """
+  description: String_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`notes` of type `String`
+  """
+  notes: String_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`recordDate` of type `Date!`
+  """
+  recordDate: Date_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`recordType` of type `String!`
+  """
+  recordType: String_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp_Filter
+}
+"""
+✨ Generated first-row input type for table 'HealthRecord'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input HealthRecord_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [HealthRecord_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: HealthRecord_Filter
+}
+"""
+✨ Generated having input type for table 'HealthRecord'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input HealthRecord_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [HealthRecord_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: HealthRecord_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [HealthRecord_Having!]
+  """
+  ✨ Generated from Field `HealthRecord`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`childId_count` of type `Int!`
+  """
+  childId_count: Int_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`description_count` of type `Int!`
+  """
+  description_count: Int_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`notes_count` of type `Int!`
+  """
+  notes_count: Int_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`recordDate_count` of type `Int!`
+  """
+  recordDate_count: Int_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`recordType_count` of type `Int!`
+  """
+  recordType_count: Int_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`userId_count` of type `Int!`
+  """
+  userId_count: Int_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`recordDate_min` of type `Date`
+  """
+  recordDate_min: Date_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`recordDate_max` of type `Date`
+  """
+  recordDate_max: Date_Filter
+  """
+  ✨ Generated from Field `HealthRecord`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'HealthRecord'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input HealthRecord_Key {
+  """
+  ✨ Generated from Field `HealthRecord`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `HealthRecord`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'HealthRecord'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input HealthRecord_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: HealthRecord_Filter
+}
+"""
+✨ Generated order input type for table 'HealthRecord'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input HealthRecord_Order {
+  """
+  ✨ Generated from Field `HealthRecord`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `HealthRecord`.`childId` of type `UUID!`
+  """
+  childId: OrderDirection
+  """
+  ✨ Generated from Field `HealthRecord`.`userId` of type `UUID!`
+  """
+  userId: OrderDirection
+  """
+  ✨ Generated from Field `HealthRecord`.`child` of type `Child!`
+  """
+  child: Child_Order
+  """
+  ✨ Generated from Field `HealthRecord`.`user` of type `User!`
+  """
+  user: User_Order
+  """
+  ✨ Generated from Field `HealthRecord`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `HealthRecord`.`description` of type `String!`
+  """
+  description: OrderDirection
+  """
+  ✨ Generated from Field `HealthRecord`.`notes` of type `String`
+  """
+  notes: OrderDirection
+  """
+  ✨ Generated from Field `HealthRecord`.`recordDate` of type `Date!`
+  """
+  recordDate: OrderDirection
+  """
+  ✨ Generated from Field `HealthRecord`.`recordType` of type `String!`
+  """
+  recordType: OrderDirection
+  """
+  ✨ Generated from Field `HealthRecord`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: OrderDirection
+}
+"""
+✨ Generated data input type for table 'ShoppingList'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input ShoppingList_Data {
+  """
+  ✨ Generated from Field `ShoppingList`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `ShoppingList`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `ShoppingList`.`userId` of type `UUID!`
+  """
+  userId: UUID
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `ShoppingList`.`userId` of type `UUID!`)
+  """
+  userId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `ShoppingList`.`user` of type `User!`
+  """
+  user: User_Key
+  """
+  ✨ Generated from Field `ShoppingList`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `ShoppingList`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `ShoppingList`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `ShoppingList`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `ShoppingList`.`description` of type `String`
+  """
+  description: String
+  """
+  ✨ `_expr` server value variant of `description` (✨ Generated from Field `ShoppingList`.`description` of type `String`)
+  """
+  description_expr: String_Expr
+  """
+  ✨ Generated from Field `ShoppingList`.`name` of type `String!`
+  """
+  name: String
+  """
+  ✨ `_expr` server value variant of `name` (✨ Generated from Field `ShoppingList`.`name` of type `String!`)
+  """
+  name_expr: String_Expr
+  """
+  ✨ Generated from Field `ShoppingList`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `updatedAt` (✨ Generated from Field `ShoppingList`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `updatedAt` (✨ Generated from Field `ShoppingList`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `updatedAt` (✨ Generated from Field `ShoppingList`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_update: [Timestamp_Update!]
+}
+"""
+✨ Generated filter input type for table 'ShoppingList'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input ShoppingList_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [ShoppingList_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: ShoppingList_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [ShoppingList_Filter!]
+  """
+  ✨ Generated from Field `ShoppingList`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`userId` of type `UUID!`
+  """
+  userId: UUID_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`user` of type `User!`
+  """
+  user: User_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`description` of type `String`
+  """
+  description: String_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`name` of type `String!`
+  """
+  name: String_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`shoppingListItems_on_shoppingList` of type `[ShoppingListItem!]!`
+  """
+  shoppingListItems_on_shoppingList: ShoppingListItem_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'ShoppingList'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input ShoppingList_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [ShoppingList_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: ShoppingList_Filter
+}
+"""
+✨ Generated having input type for table 'ShoppingList'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input ShoppingList_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [ShoppingList_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: ShoppingList_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [ShoppingList_Having!]
+  """
+  ✨ Generated from Field `ShoppingList`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`description_count` of type `Int!`
+  """
+  description_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`name_count` of type `Int!`
+  """
+  name_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`userId_count` of type `Int!`
+  """
+  userId_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `ShoppingList`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'ShoppingList'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input ShoppingList_Key {
+  """
+  ✨ Generated from Field `ShoppingList`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `ShoppingList`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'ShoppingList'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input ShoppingList_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: ShoppingList_Filter
+}
+"""
+✨ Generated order input type for table 'ShoppingList'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input ShoppingList_Order {
+  """
+  ✨ Generated from Field `ShoppingList`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `ShoppingList`.`userId` of type `UUID!`
+  """
+  userId: OrderDirection
+  """
+  ✨ Generated from Field `ShoppingList`.`user` of type `User!`
+  """
+  user: User_Order
+  """
+  ✨ Generated from Field `ShoppingList`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `ShoppingList`.`description` of type `String`
+  """
+  description: OrderDirection
+  """
+  ✨ Generated from Field `ShoppingList`.`name` of type `String!`
+  """
+  name: OrderDirection
+  """
+  ✨ Generated from Field `ShoppingList`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: OrderDirection
+}
+"""
+✨ Generated data input type for table 'ShoppingListItem'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input ShoppingListItem_Data {
+  """
+  ✨ Generated from Field `ShoppingListItem`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `ShoppingListItem`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `ShoppingListItem`.`shoppingListId` of type `UUID!`
+  """
+  shoppingListId: UUID
+  """
+  ✨ `_expr` server value variant of `shoppingListId` (✨ Generated from Field `ShoppingListItem`.`shoppingListId` of type `UUID!`)
+  """
+  shoppingListId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `ShoppingListItem`.`shoppingList` of type `ShoppingList!`
+  """
+  shoppingList: ShoppingList_Key
+  """
+  ✨ Generated from Field `ShoppingListItem`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `ShoppingListItem`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `ShoppingListItem`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `ShoppingListItem`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `ShoppingListItem`.`isPurchased` of type `Boolean`
+  """
+  isPurchased: Boolean
+  """
+  ✨ `_expr` server value variant of `isPurchased` (✨ Generated from Field `ShoppingListItem`.`isPurchased` of type `Boolean`)
+  """
+  isPurchased_expr: Boolean_Expr
+  """
+  ✨ Generated from Field `ShoppingListItem`.`itemName` of type `String!`
+  """
+  itemName: String
+  """
+  ✨ `_expr` server value variant of `itemName` (✨ Generated from Field `ShoppingListItem`.`itemName` of type `String!`)
+  """
+  itemName_expr: String_Expr
+  """
+  ✨ Generated from Field `ShoppingListItem`.`notes` of type `String`
+  """
+  notes: String
+  """
+  ✨ `_expr` server value variant of `notes` (✨ Generated from Field `ShoppingListItem`.`notes` of type `String`)
+  """
+  notes_expr: String_Expr
+  """
+  ✨ Generated from Field `ShoppingListItem`.`quantity` of type `Int`
+  """
+  quantity: Int
+  """
+  ✨ `_expr` server value variant of `quantity` (✨ Generated from Field `ShoppingListItem`.`quantity` of type `Int`)
+  """
+  quantity_expr: Int_Expr
+  """
+  ✨ `_update` server value variant of `quantity` (✨ Generated from Field `ShoppingListItem`.`quantity` of type `Int`)
+  """
+  quantity_update: [Int_Update!]
+  """
+  ✨ Generated from Field `ShoppingListItem`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `updatedAt` (✨ Generated from Field `ShoppingListItem`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `updatedAt` (✨ Generated from Field `ShoppingListItem`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `updatedAt` (✨ Generated from Field `ShoppingListItem`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_update: [Timestamp_Update!]
+}
+"""
+✨ Generated filter input type for table 'ShoppingListItem'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input ShoppingListItem_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [ShoppingListItem_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: ShoppingListItem_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [ShoppingListItem_Filter!]
+  """
+  ✨ Generated from Field `ShoppingListItem`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`shoppingListId` of type `UUID!`
+  """
+  shoppingListId: UUID_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`shoppingList` of type `ShoppingList!`
+  """
+  shoppingList: ShoppingList_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`isPurchased` of type `Boolean`
+  """
+  isPurchased: Boolean_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`itemName` of type `String!`
+  """
+  itemName: String_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`notes` of type `String`
+  """
+  notes: String_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`quantity` of type `Int`
+  """
+  quantity: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp_Filter
+}
+"""
+✨ Generated first-row input type for table 'ShoppingListItem'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input ShoppingListItem_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [ShoppingListItem_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: ShoppingListItem_Filter
+}
+"""
+✨ Generated having input type for table 'ShoppingListItem'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input ShoppingListItem_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [ShoppingListItem_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: ShoppingListItem_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [ShoppingListItem_Having!]
+  """
+  ✨ Generated from Field `ShoppingListItem`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`isPurchased_count` of type `Int!`
+  """
+  isPurchased_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`itemName_count` of type `Int!`
+  """
+  itemName_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`notes_count` of type `Int!`
+  """
+  notes_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`quantity_count` of type `Int!`
+  """
+  quantity_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`shoppingListId_count` of type `Int!`
+  """
+  shoppingListId_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`quantity_sum` of type `Int`
+  """
+  quantity_sum: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`quantity_avg` of type `Float`
+  """
+  quantity_avg: Float_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`quantity_min` of type `Int`
+  """
+  quantity_min: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`quantity_max` of type `Int`
+  """
+  quantity_max: Int_Filter
+  """
+  ✨ Generated from Field `ShoppingListItem`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'ShoppingListItem'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input ShoppingListItem_Key {
+  """
+  ✨ Generated from Field `ShoppingListItem`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `ShoppingListItem`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'ShoppingListItem'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input ShoppingListItem_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: ShoppingListItem_Filter
+}
+"""
+✨ Generated order input type for table 'ShoppingListItem'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input ShoppingListItem_Order {
+  """
+  ✨ Generated from Field `ShoppingListItem`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `ShoppingListItem`.`shoppingListId` of type `UUID!`
+  """
+  shoppingListId: OrderDirection
+  """
+  ✨ Generated from Field `ShoppingListItem`.`shoppingList` of type `ShoppingList!`
+  """
+  shoppingList: ShoppingList_Order
+  """
+  ✨ Generated from Field `ShoppingListItem`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `ShoppingListItem`.`isPurchased` of type `Boolean`
+  """
+  isPurchased: OrderDirection
+  """
+  ✨ Generated from Field `ShoppingListItem`.`itemName` of type `String!`
+  """
+  itemName: OrderDirection
+  """
+  ✨ Generated from Field `ShoppingListItem`.`notes` of type `String`
+  """
+  notes: OrderDirection
+  """
+  ✨ Generated from Field `ShoppingListItem`.`quantity` of type `Int`
+  """
+  quantity: OrderDirection
+  """
+  ✨ Generated from Field `ShoppingListItem`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: OrderDirection
+}
+"""
+✨ Generated data input type for table 'Task'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Task_Data {
+  """
+  ✨ Generated from Field `Task`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Task`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Task`.`childId` of type `UUID`
+  """
+  childId: UUID
+  """
+  ✨ `_expr` server value variant of `childId` (✨ Generated from Field `Task`.`childId` of type `UUID`)
+  """
+  childId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Task`.`userId` of type `UUID!`
+  """
+  userId: UUID
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `Task`.`userId` of type `UUID!`)
+  """
+  userId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Task`.`child` of type `Child`
+  """
+  child: Child_Key
+  """
+  ✨ Generated from Field `Task`.`user` of type `User!`
+  """
+  user: User_Key
+  """
+  ✨ Generated from Field `Task`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `Task`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `Task`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `Task`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Task`.`description` of type `String`
+  """
+  description: String
+  """
+  ✨ `_expr` server value variant of `description` (✨ Generated from Field `Task`.`description` of type `String`)
+  """
+  description_expr: String_Expr
+  """
+  ✨ Generated from Field `Task`.`dueDate` of type `Timestamp`
+  """
+  dueDate: Timestamp
+  """
+  ✨ `_expr` server value variant of `dueDate` (✨ Generated from Field `Task`.`dueDate` of type `Timestamp`)
+  """
+  dueDate_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `dueDate` (✨ Generated from Field `Task`.`dueDate` of type `Timestamp`)
+  """
+  dueDate_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `dueDate` (✨ Generated from Field `Task`.`dueDate` of type `Timestamp`)
+  """
+  dueDate_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Task`.`isCompleted` of type `Boolean`
+  """
+  isCompleted: Boolean
+  """
+  ✨ `_expr` server value variant of `isCompleted` (✨ Generated from Field `Task`.`isCompleted` of type `Boolean`)
+  """
+  isCompleted_expr: Boolean_Expr
+  """
+  ✨ Generated from Field `Task`.`priority` of type `String`
+  """
+  priority: String
+  """
+  ✨ `_expr` server value variant of `priority` (✨ Generated from Field `Task`.`priority` of type `String`)
+  """
+  priority_expr: String_Expr
+  """
+  ✨ Generated from Field `Task`.`title` of type `String!`
+  """
+  title: String
+  """
+  ✨ `_expr` server value variant of `title` (✨ Generated from Field `Task`.`title` of type `String!`)
+  """
+  title_expr: String_Expr
+  """
+  ✨ Generated from Field `Task`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `updatedAt` (✨ Generated from Field `Task`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `updatedAt` (✨ Generated from Field `Task`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `updatedAt` (✨ Generated from Field `Task`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_update: [Timestamp_Update!]
+}
+"""
+✨ Generated filter input type for table 'Task'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Task_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Task_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Task_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Task_Filter!]
+  """
+  ✨ Generated from Field `Task`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Task`.`childId` of type `UUID`
+  """
+  childId: UUID_Filter
+  """
+  ✨ Generated from Field `Task`.`userId` of type `UUID!`
+  """
+  userId: UUID_Filter
+  """
+  ✨ Generated from Field `Task`.`child` of type `Child`
+  """
+  child: Child_Filter
+  """
+  ✨ Generated from Field `Task`.`user` of type `User!`
+  """
+  user: User_Filter
+  """
+  ✨ Generated from Field `Task`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `Task`.`description` of type `String`
+  """
+  description: String_Filter
+  """
+  ✨ Generated from Field `Task`.`dueDate` of type `Timestamp`
+  """
+  dueDate: Timestamp_Filter
+  """
+  ✨ Generated from Field `Task`.`isCompleted` of type `Boolean`
+  """
+  isCompleted: Boolean_Filter
+  """
+  ✨ Generated from Field `Task`.`priority` of type `String`
+  """
+  priority: String_Filter
+  """
+  ✨ Generated from Field `Task`.`title` of type `String!`
+  """
+  title: String_Filter
+  """
+  ✨ Generated from Field `Task`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp_Filter
+}
+"""
+✨ Generated first-row input type for table 'Task'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Task_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Task_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Task_Filter
+}
+"""
+✨ Generated having input type for table 'Task'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Task_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Task_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Task_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Task_Having!]
+  """
+  ✨ Generated from Field `Task`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Task`.`childId_count` of type `Int!`
+  """
+  childId_count: Int_Filter
+  """
+  ✨ Generated from Field `Task`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `Task`.`description_count` of type `Int!`
+  """
+  description_count: Int_Filter
+  """
+  ✨ Generated from Field `Task`.`dueDate_count` of type `Int!`
+  """
+  dueDate_count: Int_Filter
+  """
+  ✨ Generated from Field `Task`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Task`.`isCompleted_count` of type `Int!`
+  """
+  isCompleted_count: Int_Filter
+  """
+  ✨ Generated from Field `Task`.`priority_count` of type `Int!`
+  """
+  priority_count: Int_Filter
+  """
+  ✨ Generated from Field `Task`.`title_count` of type `Int!`
+  """
+  title_count: Int_Filter
+  """
+  ✨ Generated from Field `Task`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `Task`.`userId_count` of type `Int!`
+  """
+  userId_count: Int_Filter
+  """
+  ✨ Generated from Field `Task`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Task`.`dueDate_min` of type `Timestamp`
+  """
+  dueDate_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Task`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Task`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Task`.`dueDate_max` of type `Timestamp`
+  """
+  dueDate_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Task`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'Task'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Task_Key {
+  """
+  ✨ Generated from Field `Task`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Task`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'Task'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Task_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Task_Filter
+}
+"""
+✨ Generated order input type for table 'Task'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Task_Order {
+  """
+  ✨ Generated from Field `Task`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Task`.`childId` of type `UUID`
+  """
+  childId: OrderDirection
+  """
+  ✨ Generated from Field `Task`.`userId` of type `UUID!`
+  """
+  userId: OrderDirection
+  """
+  ✨ Generated from Field `Task`.`child` of type `Child`
+  """
+  child: Child_Order
+  """
+  ✨ Generated from Field `Task`.`user` of type `User!`
+  """
+  user: User_Order
+  """
+  ✨ Generated from Field `Task`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `Task`.`description` of type `String`
+  """
+  description: OrderDirection
+  """
+  ✨ Generated from Field `Task`.`dueDate` of type `Timestamp`
+  """
+  dueDate: OrderDirection
+  """
+  ✨ Generated from Field `Task`.`isCompleted` of type `Boolean`
+  """
+  isCompleted: OrderDirection
+  """
+  ✨ Generated from Field `Task`.`priority` of type `String`
+  """
+  priority: OrderDirection
+  """
+  ✨ Generated from Field `Task`.`title` of type `String!`
+  """
+  title: OrderDirection
+  """
+  ✨ Generated from Field `Task`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: OrderDirection
+}
+"""
+✨ Generated data input type for table 'User'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input User_Data {
+  """
+  ✨ Generated from Field `User`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `User`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `User`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `User`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `User`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `User`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `User`.`displayName` of type `String!`
+  """
+  displayName: String
+  """
+  ✨ `_expr` server value variant of `displayName` (✨ Generated from Field `User`.`displayName` of type `String!`)
+  """
+  displayName_expr: String_Expr
+  """
+  ✨ Generated from Field `User`.`email` of type `String`
+  """
+  email: String
+  """
+  ✨ `_expr` server value variant of `email` (✨ Generated from Field `User`.`email` of type `String`)
+  """
+  email_expr: String_Expr
+  """
+  ✨ Generated from Field `User`.`photoUrl` of type `String`
+  """
+  photoUrl: String
+  """
+  ✨ `_expr` server value variant of `photoUrl` (✨ Generated from Field `User`.`photoUrl` of type `String`)
+  """
+  photoUrl_expr: String_Expr
+}
+"""
+✨ Generated filter input type for table 'User'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input User_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [User_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: User_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [User_Filter!]
+  """
+  ✨ Generated from Field `User`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `User`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `User`.`displayName` of type `String!`
+  """
+  displayName: String_Filter
+  """
+  ✨ Generated from Field `User`.`email` of type `String`
+  """
+  email: String_Filter
+  """
+  ✨ Generated from Field `User`.`photoUrl` of type `String`
+  """
+  photoUrl: String_Filter
+  """
+  ✨ Generated from Field `User`.`children_on_user` of type `[Child!]!`
+  """
+  children_on_user: Child_ListFilter
+  """
+  ✨ Generated from Field `User`.`events_on_user` of type `[Event!]!`
+  """
+  events_on_user: Event_ListFilter
+  """
+  ✨ Generated from Field `User`.`healthRecords_on_user` of type `[HealthRecord!]!`
+  """
+  healthRecords_on_user: HealthRecord_ListFilter
+  """
+  ✨ Generated from Field `User`.`shoppingLists_on_user` of type `[ShoppingList!]!`
+  """
+  shoppingLists_on_user: ShoppingList_ListFilter
+  """
+  ✨ Generated from Field `User`.`tasks_on_user` of type `[Task!]!`
+  """
+  tasks_on_user: Task_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'User'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input User_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [User_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: User_Filter
+}
+"""
+✨ Generated having input type for table 'User'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input User_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [User_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: User_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [User_Having!]
+  """
+  ✨ Generated from Field `User`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`displayName_count` of type `Int!`
+  """
+  displayName_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`email_count` of type `Int!`
+  """
+  email_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`photoUrl_count` of type `Int!`
+  """
+  photoUrl_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `User`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'User'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input User_Key {
+  """
+  ✨ Generated from Field `User`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `User`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'User'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input User_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: User_Filter
+}
+"""
+✨ Generated order input type for table 'User'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input User_Order {
+  """
+  ✨ Generated from Field `User`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `User`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `User`.`displayName` of type `String!`
+  """
+  displayName: OrderDirection
+  """
+  ✨ Generated from Field `User`.`email` of type `String`
+  """
+  email: OrderDirection
+  """
+  ✨ Generated from Field `User`.`photoUrl` of type `String`
+  """
+  photoUrl: OrderDirection
+}

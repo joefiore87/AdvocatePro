@@ -1,0 +1,78 @@
+extend type Child {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Child", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Child`.`user`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  userId: UUID! @fdc_generated(from: "Child.user", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Event {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Event", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Event`.`child`. It must match the value of `Child`.`id`. See `@ref` for how to customize it.
+  """
+  childId: UUID @fdc_generated(from: "Event.child", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Event`.`user`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  userId: UUID! @fdc_generated(from: "Event.user", purpose: IMPLICIT_REF_FIELD)
+}
+extend type HealthRecord {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "HealthRecord", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `HealthRecord`.`child`. It must match the value of `Child`.`id`. See `@ref` for how to customize it.
+  """
+  childId: UUID! @fdc_generated(from: "HealthRecord.child", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `HealthRecord`.`user`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  userId: UUID! @fdc_generated(from: "HealthRecord.user", purpose: IMPLICIT_REF_FIELD)
+}
+extend type ShoppingList {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "ShoppingList", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `ShoppingList`.`user`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  userId: UUID! @fdc_generated(from: "ShoppingList.user", purpose: IMPLICIT_REF_FIELD)
+}
+extend type ShoppingListItem {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "ShoppingListItem", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `ShoppingListItem`.`shoppingList`. It must match the value of `ShoppingList`.`id`. See `@ref` for how to customize it.
+  """
+  shoppingListId: UUID! @fdc_generated(from: "ShoppingListItem.shoppingList", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Task {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Task", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Task`.`child`. It must match the value of `Child`.`id`. See `@ref` for how to customize it.
+  """
+  childId: UUID @fdc_generated(from: "Task.child", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Task`.`user`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  userId: UUID! @fdc_generated(from: "Task.user", purpose: IMPLICIT_REF_FIELD)
+}
+extend type User {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "User", purpose: IMPLICIT_KEY_FIELD)
+}

@@ -1,0 +1,786 @@
+extend type Mutation {
+  """
+  ✨ Insert a single `Child` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  child_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Child_Data!
+  ): Child_KeyOutput! @fdc_generated(from: "Child", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Event` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  event_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Event_Data!
+  ): Event_KeyOutput! @fdc_generated(from: "Event", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `HealthRecord` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  healthRecord_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: HealthRecord_Data!
+  ): HealthRecord_KeyOutput! @fdc_generated(from: "HealthRecord", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `ShoppingList` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  shoppingList_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: ShoppingList_Data!
+  ): ShoppingList_KeyOutput! @fdc_generated(from: "ShoppingList", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `ShoppingListItem` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  shoppingListItem_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: ShoppingListItem_Data!
+  ): ShoppingListItem_KeyOutput! @fdc_generated(from: "ShoppingListItem", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Task` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  task_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Task_Data!
+  ): Task_KeyOutput! @fdc_generated(from: "Task", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `User` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  user_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: User_Data!
+  ): User_KeyOutput! @fdc_generated(from: "User", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert `Child` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  child_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Child_Data!]!
+  ): [Child_KeyOutput!]! @fdc_generated(from: "Child", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Event` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  event_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Event_Data!]!
+  ): [Event_KeyOutput!]! @fdc_generated(from: "Event", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `HealthRecord` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  healthRecord_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [HealthRecord_Data!]!
+  ): [HealthRecord_KeyOutput!]! @fdc_generated(from: "HealthRecord", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `ShoppingList` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  shoppingList_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [ShoppingList_Data!]!
+  ): [ShoppingList_KeyOutput!]! @fdc_generated(from: "ShoppingList", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `ShoppingListItem` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  shoppingListItem_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [ShoppingListItem_Data!]!
+  ): [ShoppingListItem_KeyOutput!]! @fdc_generated(from: "ShoppingListItem", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Task` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  task_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Task_Data!]!
+  ): [Task_KeyOutput!]! @fdc_generated(from: "Task", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `User` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  user_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [User_Data!]!
+  ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single `Child` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Child`.
+  """
+  child_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Child_Data!
+  ): Child_KeyOutput! @fdc_generated(from: "Child", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Event` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Event`.
+  """
+  event_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Event_Data!
+  ): Event_KeyOutput! @fdc_generated(from: "Event", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `HealthRecord` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `HealthRecord`.
+  """
+  healthRecord_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: HealthRecord_Data!
+  ): HealthRecord_KeyOutput! @fdc_generated(from: "HealthRecord", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `ShoppingList` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `ShoppingList`.
+  """
+  shoppingList_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: ShoppingList_Data!
+  ): ShoppingList_KeyOutput! @fdc_generated(from: "ShoppingList", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `ShoppingListItem` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `ShoppingListItem`.
+  """
+  shoppingListItem_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: ShoppingListItem_Data!
+  ): ShoppingListItem_KeyOutput! @fdc_generated(from: "ShoppingListItem", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Task` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Task`.
+  """
+  task_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Task_Data!
+  ): Task_KeyOutput! @fdc_generated(from: "Task", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `User` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `User`.
+  """
+  user_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: User_Data!
+  ): User_KeyOutput! @fdc_generated(from: "User", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update `Child` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Child`.
+  """
+  child_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Child_Data!]!
+  ): [Child_KeyOutput!]! @fdc_generated(from: "Child", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Event` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Event`.
+  """
+  event_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Event_Data!]!
+  ): [Event_KeyOutput!]! @fdc_generated(from: "Event", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `HealthRecord` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `HealthRecord`.
+  """
+  healthRecord_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [HealthRecord_Data!]!
+  ): [HealthRecord_KeyOutput!]! @fdc_generated(from: "HealthRecord", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `ShoppingList` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `ShoppingList`.
+  """
+  shoppingList_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [ShoppingList_Data!]!
+  ): [ShoppingList_KeyOutput!]! @fdc_generated(from: "ShoppingList", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `ShoppingListItem` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `ShoppingListItem`.
+  """
+  shoppingListItem_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [ShoppingListItem_Data!]!
+  ): [ShoppingListItem_KeyOutput!]! @fdc_generated(from: "ShoppingListItem", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Task` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Task`.
+  """
+  task_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Task_Data!]!
+  ): [Task_KeyOutput!]! @fdc_generated(from: "Task", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `User` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `User`.
+  """
+  user_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [User_Data!]!
+  ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Update a single `Child` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Child` or `null` if not found.
+  """
+  child_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Child_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Child_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Child_Data!
+  ): Child_KeyOutput @fdc_generated(from: "Child", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Event` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Event` or `null` if not found.
+  """
+  event_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Event_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Event_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Event_Data!
+  ): Event_KeyOutput @fdc_generated(from: "Event", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `HealthRecord` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `HealthRecord` or `null` if not found.
+  """
+  healthRecord_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: HealthRecord_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: HealthRecord_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: HealthRecord_Data!
+  ): HealthRecord_KeyOutput @fdc_generated(from: "HealthRecord", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `ShoppingList` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `ShoppingList` or `null` if not found.
+  """
+  shoppingList_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ShoppingList_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ShoppingList_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: ShoppingList_Data!
+  ): ShoppingList_KeyOutput @fdc_generated(from: "ShoppingList", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `ShoppingListItem` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `ShoppingListItem` or `null` if not found.
+  """
+  shoppingListItem_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ShoppingListItem_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ShoppingListItem_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: ShoppingListItem_Data!
+  ): ShoppingListItem_KeyOutput @fdc_generated(from: "ShoppingListItem", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Task` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Task` or `null` if not found.
+  """
+  task_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Task_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Task_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Task_Data!
+  ): Task_KeyOutput @fdc_generated(from: "Task", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `User` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `User` or `null` if not found.
+  """
+  user_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: User_Data!
+  ): User_KeyOutput @fdc_generated(from: "User", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update `Child` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  child_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Child_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Child_Data!
+  ): Int! @fdc_generated(from: "Child", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Event` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  event_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Event_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Event_Data!
+  ): Int! @fdc_generated(from: "Event", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `HealthRecord` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  healthRecord_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: HealthRecord_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: HealthRecord_Data!
+  ): Int! @fdc_generated(from: "HealthRecord", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `ShoppingList` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  shoppingList_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: ShoppingList_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: ShoppingList_Data!
+  ): Int! @fdc_generated(from: "ShoppingList", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `ShoppingListItem` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  shoppingListItem_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: ShoppingListItem_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: ShoppingListItem_Data!
+  ): Int! @fdc_generated(from: "ShoppingListItem", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Task` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  task_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Task_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Task_Data!
+  ): Int! @fdc_generated(from: "Task", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `User` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  user_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: User_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: User_Data!
+  ): Int! @fdc_generated(from: "User", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single `Child` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  child_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Child_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Child_FirstRow
+  ): Child_KeyOutput @fdc_generated(from: "Child", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Event` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  event_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Event_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Event_FirstRow
+  ): Event_KeyOutput @fdc_generated(from: "Event", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `HealthRecord` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  healthRecord_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: HealthRecord_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: HealthRecord_FirstRow
+  ): HealthRecord_KeyOutput @fdc_generated(from: "HealthRecord", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `ShoppingList` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  shoppingList_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ShoppingList_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ShoppingList_FirstRow
+  ): ShoppingList_KeyOutput @fdc_generated(from: "ShoppingList", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `ShoppingListItem` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  shoppingListItem_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ShoppingListItem_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ShoppingListItem_FirstRow
+  ): ShoppingListItem_KeyOutput @fdc_generated(from: "ShoppingListItem", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Task` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  task_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Task_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Task_FirstRow
+  ): Task_KeyOutput @fdc_generated(from: "Task", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `User` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  user_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+  ): User_KeyOutput @fdc_generated(from: "User", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete `Child` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  child_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Child_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Child", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Event` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  event_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Event_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Event", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `HealthRecord` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  healthRecord_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: HealthRecord_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "HealthRecord", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `ShoppingList` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  shoppingList_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: ShoppingList_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "ShoppingList", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `ShoppingListItem` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  shoppingListItem_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: ShoppingListItem_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "ShoppingListItem", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Task` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  task_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Task_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Task", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `User` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  user_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: User_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "User", purpose: DELETE_MULTIPLE)
+}
