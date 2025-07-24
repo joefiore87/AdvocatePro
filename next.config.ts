@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import type {NextConfig} from 'next';
+import path from 'path';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -18,10 +19,19 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-    unoptimized: true, // This helps with Firebase Hosting deployment
+    unoptimized: true,
   },
   
-  distDir: '.next', // Keep the default Next.js build directory
+  // Explicit webpack configuration for path resolution
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, 'src'),
+    };
+    return config;
+  },
+  
+  distDir: '.next',
 };
 
 export default nextConfig;
