@@ -1,67 +1,90 @@
-# Technical Stack & Build System
+---
+inclusion: always
+---
 
-## Core Technologies
-- **Framework**: Next.js 15.3.3 (React 18)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS with custom theme configuration
-- **Authentication**: Firebase Authentication
-- **Payment Processing**: Stripe
-- **AI Integration**: Genkit for AI features
-- **UI Components**: Radix UI primitives with custom styling
+# Technical Implementation Guidelines
 
-## Key Libraries
-- **UI Components**: Radix UI components with shadcn/ui patterns
-- **Forms**: React Hook Form with Zod validation
-- **Data Visualization**: Recharts
-- **Animation**: Framer Motion
-- **File Handling**: JSZip, File-Saver
-- **Date Handling**: date-fns
-- **Icons**: Lucide React
+## Stack Requirements
+- **Next.js 15.3.3**: App Router only, server components by default
+- **TypeScript**: Strict mode enabled, all code must be typed
+- **Tailwind CSS**: Only styling method - no inline styles or CSS modules
+- **Firebase Auth**: Authentication via `src/lib/firebase.ts`
+- **Stripe**: Payment processing in `src/app/api/stripe/`
+- **shadcn/ui**: UI components from `src/components/ui/`
 
-## Project Structure
-- Next.js App Router architecture
-- Component-based UI organization
-- Custom hooks for shared functionality
-- Tailwind for styling with consistent design tokens
+## Mandatory Code Patterns
 
-## Common Commands
+### Component Rules
+- Server components by default, add `"use client"` only when necessary
+- All props must have TypeScript interfaces
+- UI primitives go in `src/components/ui/`
+- Feature components in `src/components/` with descriptive names
+- Admin components in `src/components/admin/`
+- Always implement error boundaries for complex components
 
-### Development
-```bash
-# Start development server with Turbopack
-npm run dev
-
-# Start Genkit AI development
-npm run genkit:dev
-
-# Watch mode for Genkit
-npm run genkit:watch
+### API Route Standards
+```typescript
+// Required pattern for all API routes
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const validatedData = schema.parse(body); // Always use Zod
+    // Implementation
+    return NextResponse.json({ success: true, data });
+  } catch (error) {
+    return NextResponse.json({ error: "Message" }, { status: 400 });
+  }
+}
 ```
 
-### Build & Deployment
-```bash
-# Build the application
-npm run build
+### File Naming Conventions
+- API routes: `src/app/api/[feature]/route.ts`
+- Pages: `src/app/[route]/page.tsx`
+- Layouts: `src/app/[route]/layout.tsx`
+- Types: `src/lib/types.ts` or co-located `types.ts`
+- Utilities: `src/lib/utils.ts`
 
-# Start production server
-npm run start
+### State Management Rules
+- Use React Context for global state (reference `src/hooks/use-auth.tsx`)
+- Custom hooks in `src/hooks/` for shared logic
+- localStorage only for user preferences
+- Firebase for persistent user data
+- Never store sensitive data in client state
+
+### Import Organization
+```typescript
+// 1. React/Next.js imports
+import { NextResponse } from 'next/server';
+// 2. Third-party libraries
+import { z } from 'zod';
+// 3. Internal imports (absolute paths)
+import { auth } from '@/lib/firebase';
+import type { UserProfile } from '@/lib/types';
 ```
 
-### Quality & Testing
+## Required Validations
+- All API inputs must use Zod schemas
+- Client-side form validation with react-hook-form
+- Environment variables must be validated at startup
+- All user inputs sanitized before database storage
+
+## Error Handling Standards
+- API routes: Return consistent JSON error format
+- Components: Use error boundaries and fallback UI
+- Async operations: Always handle loading and error states
+- User feedback: Use toast notifications from `src/hooks/use-toast.ts`
+
+## Security Requirements
+- Protected routes must use authentication middleware
+- Rate limiting on all public API endpoints
+- Input sanitization for all user data
+- HTTPS only in production
+- Stripe webhooks must verify signatures
+
+## Development Workflow
 ```bash
-# Run linting
-npm run lint
-
-# Type checking
-npm run typecheck
+npm run dev          # Local development
+npm run typecheck    # Before any commit
+npm run lint         # Code quality check
+firebase deploy      # Production deployment
 ```
-
-### Firebase Deployment
-```bash
-# Deploy to Firebase
-firebase deploy
-```
-
-## Environment Variables
-- `STRIPE_SECRET_KEY`: Required for Stripe integration
-- Firebase configuration is stored in `src/lib/firebase.ts`

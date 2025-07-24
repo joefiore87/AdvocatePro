@@ -2,51 +2,67 @@
 inclusion: always
 ---
 
-# Special Education Advocacy Toolkit
+# Special Education Advocacy Toolkit - Product Guidelines
 
-## Product Overview
-The Special Education Advocacy Toolkit is a web application designed to help parents advocate for their children with special education needs. It provides tools for creating professional advocacy letters, managing profiles, and accessing educational resources about the special education process.
+## Product Context
+A Next.js web application helping parents advocate for children with special education needs through letter generation, profile management, and educational resources.
 
-## Core Features
-- **Profile Management**: Create and manage detailed advocacy profiles for children
-- **Letter Generation**: Generate professional advocacy letters using templates and profile data
-- **Educational Content**: Access a timeline-based curriculum about the special education process
-- **Data Privacy**: All user data remains local, with import/export functionality for data portability
-- **Authentication**: Firebase authentication for user accounts
-- **Payment Processing**: Stripe integration for subscription payments
+## Core Architecture Principles
+- **Privacy-First**: Store sensitive user data locally (localStorage/IndexedDB), never transmit without explicit consent
+- **Progressive Enhancement**: Core features work without JavaScript, enhanced with React
+- **Accessibility-First**: WCAG AA compliance required for all components
+- **Mobile-Responsive**: Design for mobile-first, enhance for desktop
 
-## Target Users
-- Parents and guardians of children with special education needs
-- Special education advocates
-- Educational professionals supporting families
+## Language & Content Conventions
+- **Person-First Language**: Always use "children with disabilities" not "disabled children"
+- **Tone**: Supportive, empowering, professional but approachable
+- **Terminology**: Explain special education jargon, use plain language
+- **Legal Boundaries**: Provide information, never legal advice or guarantees
 
-## Key Value Propositions
-- Simplifies the creation of formal advocacy documents
-- Provides educational guidance through the special education process
-- Ensures privacy by keeping sensitive information local
-- Offers professional templates for various advocacy scenarios
+## Feature Implementation Rules
 
-## Product Conventions
-- Use person-first language (e.g., "children with disabilities" not "disabled children")
-- Maintain a supportive, empowering tone in all user-facing content
-- Avoid educational jargon without explanation
-- Ensure all features consider accessibility needs of diverse users
+### Profile Management
+- Store profiles in localStorage with encryption
+- Implement data export (JSON/PDF) and import functionality
+- Never auto-save sensitive data to cloud without explicit user action
+- Validate all profile data with Zod schemas
 
-## UI/UX Guidelines
-- Use clear, concise language in all interfaces
-- Implement progressive disclosure for complex features
-- Maintain consistent navigation patterns throughout the application
-- Provide clear feedback for all user actions
-- Ensure all interfaces are fully accessible (WCAG AA compliance)
+### Letter Generation
+- Use template system in `src/lib/templates.ts`
+- Merge profile data with templates client-side only
+- Provide preview before generation
+- Support PDF export with proper formatting
 
-## Data Handling
-- All sensitive user data must be stored locally when possible
-- Profile data should never be transmitted without explicit user consent
-- Implement data export/import functionality for all user-generated content
-- Use secure storage methods for any locally stored data
+### Authentication & Payments
+- Firebase Auth for user accounts (non-sensitive data only)
+- Stripe for subscription management
+- Separate authenticated features from core advocacy tools
+- Graceful degradation when not authenticated
 
-## Content Guidelines
-- Educational content should be factually accurate and cite sources when appropriate
-- Letter templates should follow formal advocacy best practices
-- All content should be reviewed for clarity, accuracy, and sensitivity
-- Avoid making legal claims or providing legal advice
+## UI/UX Implementation Standards
+- Use shadcn/ui components consistently
+- Implement loading states for all async operations
+- Provide clear error messages with actionable next steps
+- Use progressive disclosure for complex forms
+- Ensure keyboard navigation works throughout
+
+## Code Style Requirements
+- TypeScript strict mode enabled
+- Use React Server Components where appropriate
+- Implement proper error boundaries
+- Follow Next.js App Router patterns
+- Use Tailwind CSS classes, avoid inline styles
+
+## Data Security Rules
+- Never log sensitive user data
+- Use HTTPS for all external requests
+- Implement proper input validation and sanitization
+- Store minimal data in Firebase (user ID, subscription status only)
+- Provide clear data deletion options
+
+## Content Creation Guidelines
+- Educational content must be factually accurate
+- Cite authoritative sources (IDEA, state regulations)
+- Review all templates with special education professionals
+- Use inclusive language throughout
+- Avoid making promises about outcomes
