@@ -8,11 +8,25 @@ env:
   - variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
     value: pk_live_51RhSLlAHtQyvoAZvp180MdJUpy1zaHAip4Dah86LrThISYypFsZKu9MHiB9L0qWb6PypduSXW09XterzJgIwB7Xa00pLTJ2V51
   - variable: NEXT_PUBLIC_APP_URL
-    value: https://advocate-empower.web.app
+    value: https://turboparentpro--advocate-empower.us-central1.hosted.app
   - variable: NEXT_PUBLIC_DEPLOYMENT_ENV
     value: production
   - variable: NODE_ENV
     value: production
+  
+  # Firebase Client Configuration
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyD6OJWg2YSFiXqrqBoRH-S3g_CZqJCsXeA
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: advocate-empower.firebaseapp.com
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: advocate-empower
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: advocate-empower.firebasestorage.app
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: "662566433758"
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: "1:662566433758:web:ae5cc7edb538f92500634f"
   
   # Firebase Admin SDK
   - variable: FIREBASE_ADMIN_PROJECT_ID
@@ -34,6 +48,6 @@ env:
   
   # AI/Genkit Configuration
   - variable: GOOGLE_API_KEY
-    value: AIzaSyAI9qdwbsdJ2HyeEvwpYRZlekKKt-oUo5A
+    value: AIzaSyAcuxr8HHh829jTO_cqad-VpBoXyhf5JMQ
   - variable: GENKIT_API_KEY
-    value: AIzaSyB_UROFK1IunXiJHDm19zOQYESArYeH7Fw
+    value: AIzaSyAcuxr8HHh829jTO_cqad-VpBoXyhf5JMQ
