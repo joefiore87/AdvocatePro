@@ -146,6 +146,24 @@ export async function POST(req: NextRequest) {
       console.error('Firebase services not initialized');
       return NextResponse.json({ error: 'Service unavailable' }, { status: 503 });
     }
+
+    // Check for webhook idempotency to prevent duplicate processing
+    const eventId = event.id;
+    const eventRef = firestore.collection('webhook_events').doc(eventId);
+    const eventDoc = await eventRef.get();
+    
+    if (eventDoc.exists) {
+      console.log(`⏭️ Webhook event ${eventId} already processed, skipping`);
+      return NextResponse.json({ received: true, status: 'already_processed' });
+    }
+    
+    // Mark event as being processed
+    await eventRef.set({
+      eventId,
+      eventType: event.type,
+      processedAt: new Date(),
+      status: 'processing'
+    });
     
     // Handle the event
     switch (event.type) {
@@ -293,9 +311,29 @@ export async function POST(req: NextRequest) {
         console.log(`Unhandled event type: ${event.type}`);
     }
     
+    // Mark event as completed
+    await eventRef.update({
+      status: 'completed',
+      completedAt: new Date()
+    });
+    
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error('Stripe webhook error:', error);
+    
+    // Mark event as failed if we have the event ID
+    if (event?.id && firestore) {
+      try {
+        await firestore.collection('webhook_events').doc(event.id).update({
+          status: 'failed',
+          error: error instanceof Error ? error.message : 'Unknown error',
+          failedAt: new Date()
+        });
+      } catch (updateError) {
+        console.error('Failed to update webhook event status:', updateError);
+      }
+    }
+    
     return NextResponse.json({ error: 'Webhook processing failed' }, { status: 400 });
   }
 }

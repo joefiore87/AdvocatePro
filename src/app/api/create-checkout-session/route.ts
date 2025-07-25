@@ -1,36 +1,29 @@
 import { stripe } from '@/lib/stripe';
 import { NextResponse } from 'next/server';
+import { requireValidEnv } from '@/lib/env-validation';
 
 export async function POST(req: Request) {
   try {
     const { userId, email } = await req.json();
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+    
+    // Validate environment variables
+    const env = requireValidEnv();
 
     if (!userId || !email) {
       return NextResponse.json({ error: { message: 'Missing userId or email' } }, { status: 400 });
     }
-    
-    if (!appUrl) {
-      throw new Error('NEXT_PUBLIC_APP_URL is not set in environment variables');
-    }
-    
-    if (!process.env.STRIPE_PRICE_ID) {
-      throw new Error('STRIPE_PRICE_ID is not set in environment variables');
-    }
-
-    const priceId = process.env.STRIPE_PRICE_ID;
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
         {
-          price: priceId,
+          price: env.STRIPE_PRICE_ID,
           quantity: 1,
         },
       ],
-      mode: 'payment', // Changed from 'subscription' to 'payment' for one-time purchase
-      success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${appUrl}/purchase`,
+      mode: 'payment', // One-time purchase
+      success_url: `${env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${env.NEXT_PUBLIC_APP_URL}/purchase`,
       customer_email: email,
       client_reference_id: userId,
       metadata: {
