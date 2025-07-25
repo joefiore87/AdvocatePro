@@ -1,4 +1,100 @@
 {
-  "indexes": [],
-  "fieldOverrides": []
+  "indexes": [
+    {
+      "collectionGroup": "items",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {"fieldPath": "category", "order": "ASCENDING"},
+        {"fieldPath": "lastUpdated", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "items", 
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {"fieldPath": "type", "order": "ASCENDING"},
+        {"fieldPath": "lastUpdated", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "studentProfiles",
+      "queryScope": "COLLECTION_GROUP", 
+      "fields": [
+        {"fieldPath": "createdAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "studentProfiles",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {"fieldPath": "grade", "order": "ASCENDING"},
+        {"fieldPath": "createdAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "generatedLetters",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {"fieldPath": "generatedAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "generatedLetters",
+      "queryScope": "COLLECTION_GROUP", 
+      "fields": [
+        {"fieldPath": "templateId", "order": "ASCENDING"},
+        {"fieldPath": "generatedAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "savedTemplates",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {"fieldPath": "createdAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collection": "subscriptions",
+      "fields": [
+        {"fieldPath": "status", "order": "ASCENDING"},
+        {"fieldPath": "currentPeriodEnd", "order": "ASCENDING"}
+      ]
+    },
+    {
+      "collection": "payments",
+      "fields": [
+        {"fieldPath": "paymentStatus", "order": "ASCENDING"},
+        {"fieldPath": "purchaseDate", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collection": "users",
+      "fields": [
+        {"fieldPath": "subscriptionStatus", "order": "ASCENDING"},
+        {"fieldPath": "createdAt", "order": "DESCENDING"}
+      ]
+    }
+  ],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "generatedLetters",
+      "fieldPath": "content",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "studentProfiles", 
+      "fieldPath": "concerns",
+      "indexes": [
+        {
+          "arrayConfig": "CONTAINS",
+          "queryScope": "COLLECTION"
+        }
+      ]
+    }
+  ]
 }

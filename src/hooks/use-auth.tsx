@@ -6,20 +6,29 @@ import {
   onAuthStateChanged, 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
-  signOut as firebaseSignOut
+  signOut as firebaseSignOut,
+  onIdTokenChanged
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { getUserRole, UserRole } from '@/lib/roles';
+
+export interface UserRole {
+  role: 'admin' | 'user' | null;
+  hasAccess: boolean;
+  subscriptionStatus: 'active' | 'expired' | 'cancelled' | 'none';
+  expiresAt?: number;
+}
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   userRole: UserRole;
   isAdmin: boolean;
+  hasAccess: boolean;
   roleLoading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  refreshUserClaims: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,57 +36,114 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [userRole, setUserRole] = useState<UserRole>(null);
+  const [userRole, setUserRole] = useState<UserRole>({
+    role: null,
+    hasAccess: false,
+    subscriptionStatus: 'none'
+  });
   const [roleLoading, setRoleLoading] = useState(true);
 
-  // Listen for auth state changes
+  // Parse custom claims from Firebase token
+  const parseCustomClaims = (token: any): UserRole => {
+    return {
+      role: token.role || null,
+      hasAccess: token.hasAccess || false,
+      subscriptionStatus: token.subscriptionStatus || 'none',
+      expiresAt: token.expiresAt || undefined
+    };
+  };
+  // Listen for auth state changes and token refresh
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onIdTokenChanged(auth, async (user) => {
       setUser(user);
       setLoading(false);
       
-      // Reset role when user changes
-      if (!user) {
-        setUserRole(null);
-        setRoleLoading(false);
+      if (user) {
+        try {
+          // Get fresh token with custom claims
+          const tokenResult = await user.getIdTokenResult(true);
+          const claims = parseCustomClaims(tokenResult.claims);
+          setUserRole(claims);
+        } catch (error) {
+          console.error('Error getting token claims:', error);
+          setUserRole({
+            role: null,
+            hasAccess: false,
+            subscriptionStatus: 'none'
+          });
+        }
+      } else {
+        setUserRole({
+          role: null,
+          hasAccess: false,
+          subscriptionStatus: 'none'
+        });
       }
+      
+      setRoleLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  // Fetch user role when user changes
-  useEffect(() => {
-    async function fetchUserRole() {
-      if (user?.email) {
-        setRoleLoading(true);
-        try {
-          const role = await getUserRole(user.email);
-          setUserRole(role);
-        } catch (error) {
-          console.error('Error fetching user role:', error);
-          setUserRole(null);
-        } finally {
-          setRoleLoading(false);
-        }
+  // Refresh user claims (call after subscription change)
+  const refreshUserClaims = async () => {
+    if (user) {
+      setRoleLoading(true);
+      try {
+        // Force token refresh to get updated custom claims
+        const tokenResult = await user.getIdTokenResult(true);
+        const claims = parseCustomClaims(tokenResult.claims);
+        setUserRole(claims);
+      } catch (error) {
+        console.error('Error refreshing claims:', error);
+      } finally {
+        setRoleLoading(false);
       }
     }
-
-    if (user) {
-      fetchUserRole();
-    }
-  }, [user]);
+  };
 
   const signIn = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    
+    // Create user profile if it doesn't exist
+    if (result.user) {
+      await createUserProfile(result.user);
+    }
   };
 
   const signUp = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Create user profile
+    if (result.user) {
+      await createUserProfile(result.user);
+    }
   };
 
   const signOut = async () => {
     await firebaseSignOut(auth);
+  };
+  // Create user profile in Firestore
+  const createUserProfile = async (user: User) => {
+    try {
+      const token = await user.getIdToken();
+      
+      await fetch('/api/user/create-profile', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: user.email,
+          displayName: user.displayName,
+          uid: user.uid
+        })
+      });
+    } catch (error) {
+      console.error('Error creating user profile:', error);
+    }
   };
 
   return (
@@ -85,11 +151,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       loading,
       userRole,
-      isAdmin: userRole === 'admin',
+      isAdmin: userRole.role === 'admin',
+      hasAccess: userRole.hasAccess,
       roleLoading,
       signIn,
       signUp,
-      signOut
+      signOut,
+      refreshUserClaims
     }}>
       {children}
     </AuthContext.Provider>

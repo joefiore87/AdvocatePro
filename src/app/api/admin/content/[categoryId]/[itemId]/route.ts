@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdminAuth } from '@/lib/auth-middleware';
 import { rateLimiters } from '@/lib/rate-limit';
-import { updateContentItem, getContentCategory } from '@/lib/server/content-service';
+import { updateContentItem } from '@/lib/server/content-service';
 import { ContentItem } from '@/lib/content-types';
 import { getAuthAdmin } from '@/lib/firebase-admin';
 
@@ -46,14 +46,10 @@ export async function PUT(
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const success = await updateContentItem(categoryId, itemId, body.value, 'admin');
-  if (!success) {
-    return NextResponse.json({ success: false }, { status: 500 });
+  const updatedItem = await updateContentItem(categoryId, itemId, body.value, 'admin');
+  if (!updatedItem) {
+    return NextResponse.json({ success: false, error: 'Failed to update item' }, { status: 500 });
   }
-
-  // Return updated item for convenience
-  const updatedCategory = await getContentCategory(categoryId);
-  const updatedItem = updatedCategory?.items.find(i => i.id === itemId);
 
   const resp: UpdateContentResponse = {
     success: true,

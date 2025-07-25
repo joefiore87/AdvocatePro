@@ -134,12 +134,12 @@ export async function getContentCategory(categoryId: string): Promise<ContentCat
  * Update a content item
  * Server-side only function
  */
-export async function updateContentItem(categoryId: string, itemId: string, value: string, updatedBy?: string): Promise<boolean> {
+export async function updateContentItem(categoryId: string, itemId: string, value: string, updatedBy?: string): Promise<ContentItem | null> {
   try {
     const db = await getFirestoreAdmin();
     if (!db) {
       console.error('Firestore admin not available');
-      return false;
+      return null;
     }
 
     const itemRef = db.collection('content').doc(categoryId).collection('items').doc(itemId);
@@ -147,22 +147,24 @@ export async function updateContentItem(categoryId: string, itemId: string, valu
     
     if (!itemSnap.exists) {
       console.error(`Content item ${categoryId}/${itemId} not found`);
-      return false;
+      return null;
     }
     
     const currentItem = itemSnap.data() as ContentItem;
-    
-    await itemRef.set({
+
+    const updatedItem: ContentItem = {
       ...currentItem,
       value,
       lastUpdated: new Date().toISOString(),
       updatedBy: updatedBy || 'system'
-    });
+    };
     
-    return true;
+    await itemRef.set(updatedItem);
+    
+    return updatedItem;
   } catch (error) {
     console.error(`Error updating content item ${categoryId}/${itemId}:`, error);
-    return false;
+    return null;
   }
 }
 
