@@ -68,6 +68,7 @@ export async function getAuthAdmin() {
         adminApp = admin.initializeApp({
           credential: admin.credential.cert(serviceAccount),
           projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
+          databaseURL: `https://${process.env.FIREBASE_ADMIN_PROJECT_ID}-default-rtdb.firebaseio.com/`,
         });
       }
       
@@ -89,7 +90,13 @@ export async function getFirestoreAdmin() {
     return null;
   }
   try {
-    return admin.firestore();
+    // Initialize Firestore with the specific database
+    const firestore = admin.firestore();
+    // For named databases, we need to use the settings
+    firestore.settings({
+      databaseId: 'turboparent'
+    });
+    return firestore;
   } catch (error) {
     console.error('Error obtaining Firestore admin instance:', error);
     return null;

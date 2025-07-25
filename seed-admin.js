@@ -1,10 +1,19 @@
 const admin = require('firebase-admin');
 
-admin.initializeApp({
-  credential: admin.credential.cert(require('./service-account-key.json'))
-});
+if (!process.env.SERVICE_ACCOUNT_KEY_JSON) {
+  console.error('❌ SERVICE_ACCOUNT_KEY_JSON environment variable not set.');
+  process.exit(1);
+}
 
-const email = 'joejfiore@gmail.com';
+const email = process.argv[2];
+if (!email) {
+  console.error('❌ Please provide an email address as a command-line argument.');
+  process.exit(1);
+}
+
+admin.initializeApp({
+  credential: admin.credential.cert(JSON.parse(process.env.SERVICE_ACCOUNT_KEY_JSON))
+});
 
 admin.auth().getUserByEmail(email)
   .then(user => {

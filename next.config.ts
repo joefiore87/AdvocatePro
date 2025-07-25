@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   images: {
     remotePatterns: [
@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-    unoptimized: true,
+    unoptimized: false,
   },
   
   // Explicit webpack configuration for path resolution

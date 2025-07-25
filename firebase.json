@@ -16,5 +16,11 @@
     "ui": {
       "enabled": true
     }
+  },
+  "firestore": {
+    "database": "turboparent",
+    "location": "us-east4",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
   }
 }
