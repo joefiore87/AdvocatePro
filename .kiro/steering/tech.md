@@ -2,25 +2,25 @@
 inclusion: always
 ---
 
-# Special Education Advocacy Toolkit - Development Guidelines
+# Special Education Advocacy Toolkit - AI Assistant Guidelines
 
 ## Product Context
-A Next.js web application helping parents advocate for children with special education needs through letter generation, profile management, and educational resources.
+Next.js application for special education advocacy with letter generation, profile management, and educational resources. **CRITICAL**: Use person-first language ("children with disabilities" not "disabled children") and never provide legal advice.
 
-## Core Technical Stack
+## Required Tech Stack
 - **Next.js 15.3.3**: App Router only, server components by default
-- **TypeScript**: Strict mode enabled, all code must be typed
-- **Tailwind CSS**: Only styling method - no inline styles or CSS modules
-- **Firebase**: Authentication (`src/lib/firebase.ts`) and Firestore
-- **Stripe**: Payment processing in `src/app/api/stripe/`
-- **shadcn/ui**: UI components from `src/components/ui/`
-- **Genkit**: AI features in `src/ai/`
+- **TypeScript**: Strict mode - all code must be fully typed
+- **Tailwind CSS**: ONLY styling method - never use inline styles or CSS modules
+- **Firebase**: Auth + Firestore (`src/lib/firebase.ts`)
+- **Stripe**: Payments (`src/app/api/stripe/`)
+- **shadcn/ui**: UI components (`src/components/ui/`)
+- **Zod**: All API validation
 
-## Privacy-First Architecture
-- **Sensitive Data**: Store user profiles in localStorage with encryption, never transmit without explicit consent
-- **Cloud Storage**: Firebase only for user ID and subscription status
-- **Data Export**: Implement JSON/PDF export functionality
-- **Local Processing**: Letter generation and profile merging client-side only
+## Privacy-First Rules (NON-NEGOTIABLE)
+- **Sensitive Data**: Store user profiles in localStorage only, never transmit without explicit consent
+- **Cloud Storage**: Firebase stores ONLY user ID and subscription status
+- **Processing**: Letter generation and profile merging must be client-side only
+- **Encryption**: Encrypt sensitive data in localStorage
 
 ## Mandatory Code Patterns
 

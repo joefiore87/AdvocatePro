@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { rateLimiters } from '@/lib/rate-limit';
+import { getAuthAdmin } from '@/lib/firebase-admin';
 
 export async function GET(req: NextRequest) {
   try {
@@ -10,17 +11,32 @@ export async function GET(req: NextRequest) {
       return rateLimitResponse;
     }
 
-    const { searchParams } = new URL(req.url);
-    const email = searchParams.get('email');
-
-    if (!email) {
-      return NextResponse.json({ hasAccess: false, error: 'Email required' }, { status: 400 });
+    // Get Firebase token from Authorization header
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ hasAccess: false, error: 'Authentication required' }, { status: 401 });
     }
 
-    // Check Stripe for successful payments (since we're using one-time payments, not subscriptions)
-    const payments = await stripe.paymentIntents.list({
-      limit: 10,
-    });
+    const token = authHeader.split('Bearer ')[1];
+    
+    // Verify Firebase token and get user email
+    let email: string;
+    try {
+      const adminAuth = await getAuthAdmin();
+      if (!adminAuth) {
+        return NextResponse.json({ hasAccess: false, error: 'Firebase Admin not configured' }, { status: 500 });
+      }
+      
+      const decodedToken = await adminAuth.verifyIdToken(token);
+      email = decodedToken.email || '';
+      
+      if (!email) {
+        return NextResponse.json({ hasAccess: false, error: 'Email not found in token' }, { status: 400 });
+      }
+    } catch (error) {
+      console.error('Token verification failed:', error);
+      return NextResponse.json({ hasAccess: false, error: 'Invalid authentication token' }, { status: 401 });
+    }
 
     // Find payments from this customer's email
     let hasAccess = false;
