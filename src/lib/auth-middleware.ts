@@ -4,11 +4,14 @@ import { getAuthAdmin } from './firebase-admin';
 interface AuthUser {
   uid: string;
   email: string;
+  hasAccess?: boolean;
+  role?: string;
+  subscriptionStatus?: string;
 }
 
 /**
- * Verify the Firebase ID token from the request
- * Returns the decoded token if valid, null otherwise
+ * Verify the Firebase ID token from the request and return user with custom claims
+ * Returns the decoded token with claims if valid, null otherwise
  */
 export async function verifyAuthToken(req: NextRequest): Promise<AuthUser | null> {
   try {
@@ -29,7 +32,10 @@ export async function verifyAuthToken(req: NextRequest): Promise<AuthUser | null
     
     return {
       uid: decodedToken.uid,
-      email: decodedToken.email || ''
+      email: decodedToken.email || '',
+      hasAccess: decodedToken.hasAccess || false,
+      role: decodedToken.role || 'user',
+      subscriptionStatus: decodedToken.subscriptionStatus || 'none'
     };
   } catch (error) {
     console.error('Error verifying token:', error);
@@ -38,7 +44,7 @@ export async function verifyAuthToken(req: NextRequest): Promise<AuthUser | null
 }
 
 /**
- * Check if the user has admin role
+ * Check if the user has admin role via custom claims
  */
 export async function isAdminUser(userId: string): Promise<boolean> {
   try {
@@ -57,6 +63,29 @@ export async function isAdminUser(userId: string): Promise<boolean> {
 }
 
 /**
+ * Middleware to protect premium routes - requires hasAccess custom claim
+ */
+export async function requirePremiumAuth(req: NextRequest): Promise<NextResponse | null> {
+  const user = await verifyAuthToken(req);
+  
+  if (!user) {
+    return NextResponse.json(
+      { error: 'Authentication required' }, 
+      { status: 401 }
+    );
+  }
+
+  if (!user.hasAccess) {
+    return NextResponse.json(
+      { error: 'Premium access required. Please complete your purchase.' }, 
+      { status: 403 }
+    );
+  }
+
+  return null;
+}
+
+/**
  * Middleware to protect admin routes
  */
 export async function requireAdminAuth(req: NextRequest): Promise<NextResponse | null> {
@@ -64,16 +93,31 @@ export async function requireAdminAuth(req: NextRequest): Promise<NextResponse |
   
   if (!user) {
     return NextResponse.json(
-      { error: 'Unauthorized' }, 
+      { error: 'Authentication required' }, 
       { status: 401 }
     );
   }
 
-  const isAdmin = await isAdminUser(user.uid);
-  if (!isAdmin) {
+  if (user.role !== 'admin') {
     return NextResponse.json(
       { error: 'Admin access required' }, 
       { status: 403 }
+    );
+  }
+
+  return null;
+}
+
+/**
+ * Middleware to require basic authentication (any logged-in user)
+ */
+export async function requireAuth(req: NextRequest): Promise<NextResponse | null> {
+  const user = await verifyAuthToken(req);
+  
+  if (!user) {
+    return NextResponse.json(
+      { error: 'Authentication required' }, 
+      { status: 401 }
     );
   }
 

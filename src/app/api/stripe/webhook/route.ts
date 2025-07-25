@@ -14,7 +14,7 @@ interface PaymentData {
   purchaseDate: Date;
   expirationDate: Date;
   amountPaid: number;
-  firebaseUid?: string;
+  firebaseUid: string;
 }
 
 interface SubscriptionData {
@@ -28,6 +28,102 @@ interface SubscriptionData {
   planType: string;
   createdAt: Date;
   updatedAt: Date;
+  firebaseUid: string;
+}
+
+async function findUserByEmail(email: string) {
+  try {
+    const auth = await getAuthAdmin();
+    if (!auth) throw new Error('Firebase Admin not available');
+    
+    return await auth.getUserByEmail(email);
+  } catch (error) {
+    console.error(`Failed to find user by email ${email}:`, error);
+    return null;
+  }
+}
+
+async function grantUserAccess(email: string, expirationDate: Date) {
+  try {
+    const auth = await getAuthAdmin();
+    const firestore = await getFirestoreAdmin();
+    
+    if (!auth || !firestore) {
+      throw new Error('Firebase services not available');
+    }
+
+    // Get or create Firebase user
+    let user;
+    try {
+      user = await auth.getUserByEmail(email);
+    } catch (error) {
+      console.log(`User not found, creating: ${email}`);
+      user = await auth.createUser({
+        email,
+        emailVerified: true
+      });
+    }
+
+    // Set custom claims for immediate access
+    await auth.setCustomUserClaims(user.uid, {
+      hasAccess: true,
+      role: 'user',
+      subscriptionStatus: 'active',
+      expiresAt: expirationDate.getTime(),
+      updatedAt: Date.now()
+    });
+
+    // Update user document using UID as document ID
+    await firestore.collection('users').doc(user.uid).set({
+      uid: user.uid,
+      email,
+      subscriptionStatus: 'active',
+      hasAccess: true,
+      expiresAt: expirationDate,
+      updatedAt: new Date(),
+      createdAt: new Date()
+    }, { merge: true });
+
+    console.log(`✅ Access granted successfully for: ${email} (UID: ${user.uid})`);
+    return user.uid;
+  } catch (error) {
+    console.error(`❌ Failed to grant access for ${email}:`, error);
+    return null;
+  }
+}
+
+async function revokeUserAccess(email: string, reason: string) {
+  try {
+    const auth = await getAuthAdmin();
+    const firestore = await getFirestoreAdmin();
+    
+    if (!auth || !firestore) {
+      throw new Error('Firebase services not available');
+    }
+
+    const user = await auth.getUserByEmail(email);
+    
+    // Remove custom claims
+    await auth.setCustomUserClaims(user.uid, {
+      hasAccess: false,
+      role: 'user',
+      subscriptionStatus: reason,
+      updatedAt: Date.now()
+    });
+
+    // Update user document using UID
+    await firestore.collection('users').doc(user.uid).update({
+      subscriptionStatus: reason,
+      hasAccess: false,
+      updatedAt: new Date()
+    });
+
+    console.log(`❌ Access revoked for ${email} (UID: ${user.uid}): ${reason}`);
+    return user.uid;
+  } catch (error) {
+    console.error(`Failed to revoke access for ${email}:`, error);
+    return null;
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -57,7 +153,7 @@ export async function POST(req: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session;
         
         if (session.payment_status === 'paid') {
-          const customerEmail = session.customer_details?.email;
+          const customerEmail = session.customer_details?.email || session.metadata?.userEmail;
           
           if (!customerEmail) {
             console.error('No customer email found in session');
@@ -69,6 +165,14 @@ export async function POST(req: NextRequest) {
           const expirationDate = new Date(purchaseDate);
           expirationDate.setFullYear(expirationDate.getFullYear() + 1);
           
+          // Grant user access and get UID
+          const userUid = await grantUserAccess(customerEmail, expirationDate);
+          
+          if (!userUid) {
+            console.error(`Failed to grant access for ${customerEmail}`);
+            break;
+          }
+          
           const paymentData: PaymentData = {
             customerId: session.customer?.toString() || session.client_reference_id || 'unknown',
             email: customerEmail,
@@ -77,13 +181,13 @@ export async function POST(req: NextRequest) {
             purchaseDate: purchaseDate,
             expirationDate: expirationDate,
             amountPaid: session.amount_total || 0,
-            firebaseUid: session.metadata?.firebaseUid || session.client_reference_id || undefined
+            firebaseUid: userUid
           };
           
-          // Store payment record in Firestore
-          await firestore.collection('payments').doc(customerEmail).set(paymentData);
+          // Store payment record using UID as document ID
+          await firestore.collection('payments').doc(userUid).set(paymentData);
           
-          // Create/Update subscription record
+          // Create/Update subscription record using UID
           const subscriptionData: SubscriptionData = {
             customerId: paymentData.customerId,
             email: customerEmail,
@@ -94,33 +198,13 @@ export async function POST(req: NextRequest) {
             priceId: session.metadata?.priceId || '',
             planType: 'annual',
             createdAt: purchaseDate,
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            firebaseUid: userUid
           };
           
-          await firestore.collection('subscriptions').doc(customerEmail).set(subscriptionData);
+          await firestore.collection('subscriptions').doc(userUid).set(subscriptionData);
           
-          // Update user profile
-          await firestore.collection('users').doc(customerEmail).update({
-            subscriptionStatus: 'active',
-            updatedAt: new Date()
-          });
-          
-          // Set Firebase custom claims for instant access
-          try {
-            const user = await auth.getUserByEmail(customerEmail);
-            await auth.setCustomUserClaims(user.uid, {
-              hasAccess: true,
-              role: 'user',
-              subscriptionStatus: 'active',
-              expiresAt: expirationDate.getTime()
-            });
-            
-            console.log(`✅ Custom claims set for ${customerEmail} - Access granted`);
-          } catch (error) {
-            console.error(`Error setting custom claims for ${customerEmail}:`, error);
-          }
-          
-          console.log(`Payment processed and access granted for ${customerEmail}`);
+          console.log(`🎉 Payment processed successfully for ${customerEmail} (UID: ${userUid})`);
         }
         
         break;
@@ -139,42 +223,36 @@ export async function POST(req: NextRequest) {
         
         const customerEmail = customer.email;
         const isActive = subscription.status === 'active';
+        const periodEnd = new Date(subscription.current_period_end * 1000);
         
-        // Update subscription record
+        // Find user by email to get UID
+        const user = await findUserByEmail(customerEmail);
+        if (!user) {
+          console.error(`User not found for email: ${customerEmail}`);
+          break;
+        }
+        
+        // Update subscription record using UID
         const subscriptionData: SubscriptionData = {
           customerId: subscription.customer as string,
           email: customerEmail,
           subscriptionId: subscription.id,
           status: subscription.status,
           currentPeriodStart: new Date(subscription.current_period_start * 1000),
-          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+          currentPeriodEnd: periodEnd,
           priceId: subscription.items.data[0]?.price.id || '',
           planType: subscription.items.data[0]?.price.recurring?.interval || 'unknown',
           createdAt: new Date(subscription.created * 1000),
-          updatedAt: new Date()
+          updatedAt: new Date(),
+          firebaseUid: user.uid
         };
         
-        await firestore.collection('subscriptions').doc(customerEmail).set(subscriptionData);
+        await firestore.collection('subscriptions').doc(user.uid).set(subscriptionData);
         
-        // Update user profile
-        await firestore.collection('users').doc(customerEmail).update({
-          subscriptionStatus: subscription.status,
-          updatedAt: new Date()
-        });
-        
-        // Update Firebase custom claims
-        try {
-          const user = await auth.getUserByEmail(customerEmail);
-          await auth.setCustomUserClaims(user.uid, {
-            hasAccess: isActive,
-            role: 'user',
-            subscriptionStatus: subscription.status,
-            expiresAt: subscriptionData.currentPeriodEnd.getTime()
-          });
-          
-          console.log(`✅ Subscription ${subscription.status} - Claims updated for ${customerEmail}`);
-        } catch (error) {
-          console.error(`Error updating custom claims for ${customerEmail}:`, error);
+        if (isActive) {
+          await grantUserAccess(customerEmail, periodEnd);
+        } else {
+          await revokeUserAccess(customerEmail, subscription.status);
         }
         
         break;
@@ -192,31 +270,21 @@ export async function POST(req: NextRequest) {
         
         const customerEmail = customer.email;
         
-        // Update subscription status
-        await firestore.collection('subscriptions').doc(customerEmail).update({
+        // Find user by email to get UID
+        const user = await findUserByEmail(customerEmail);
+        if (!user) {
+          console.error(`User not found for email: ${customerEmail}`);
+          break;
+        }
+        
+        // Update subscription status using UID
+        await firestore.collection('subscriptions').doc(user.uid).update({
           status: 'cancelled',
           updatedAt: new Date()
         });
         
-        // Update user profile
-        await firestore.collection('users').doc(customerEmail).update({
-          subscriptionStatus: 'cancelled',
-          updatedAt: new Date()
-        });
-        
-        // Remove access via custom claims
-        try {
-          const user = await auth.getUserByEmail(customerEmail);
-          await auth.setCustomUserClaims(user.uid, {
-            hasAccess: false,
-            role: 'user',
-            subscriptionStatus: 'cancelled'
-          });
-          
-          console.log(`❌ Subscription cancelled - Access removed for ${customerEmail}`);
-        } catch (error) {
-          console.error(`Error removing custom claims for ${customerEmail}:`, error);
-        }
+        // Revoke access
+        await revokeUserAccess(customerEmail, 'cancelled');
         
         break;
       }

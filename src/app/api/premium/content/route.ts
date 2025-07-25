@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAuthToken } from '@/lib/auth-middleware';
+import { requirePremiumAuth } from '@/lib/auth-middleware';
 import { getFirestoreAdmin } from '@/lib/firebase-admin';
 import { rateLimiters } from '@/lib/rate-limit';
 
@@ -9,19 +9,16 @@ export async function GET(req: NextRequest) {
     const limited = await rateLimiters.api(req);
     if (limited) return limited;
 
-    // Verify Firebase ID token and check access
-    const user = await verifyAuthToken(req);
-    if (!user || !user.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // Check premium access via custom claims
+    const authError = await requirePremiumAuth(req);
+    if (authError) return authError;
 
-    // Check if user has access via custom claims
-    if (!user.hasAccess) {
-      return NextResponse.json({ 
-        error: 'Premium access required',
-        hasAccess: false 
-      }, { status: 403 });
-    }
+    // Get user from verified token (we know it's valid from requirePremiumAuth)
+    const authHeader = req.headers.get('Authorization');
+    const token = authHeader!.split('Bearer ')[1];
+    const auth = await import('firebase-admin').then(m => m.auth());
+    const decodedToken = await auth.verifyIdToken(token);
+    const userEmail = decodedToken.email!;
 
     const db = await getFirestoreAdmin();
     if (!db) {

@@ -1,73 +1,54 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAuthToken } from '@/lib/auth-middleware';
+import { requireAuth, verifyAuthToken } from '@/lib/auth-middleware';
 import { getFirestoreAdmin } from '@/lib/firebase-admin';
-import { rateLimiters } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
   try {
-    // Apply rate limiting
-    const limited = await rateLimiters.api(req);
-    if (limited) return limited;
-
-    // Verify Firebase ID token
+    // Verify authentication and get user info
     const user = await verifyAuthToken(req);
-    if (!user || !user.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
     }
 
-    const { email, displayName, uid } = await req.json();
-
-    // Validate email matches token
-    if (email !== user.email) {
-      return NextResponse.json({ error: 'Email mismatch' }, { status: 400 });
-    }
+    // Get additional data from request
+    const { displayName } = await req.json();
 
     const db = await getFirestoreAdmin();
     if (!db) {
       return NextResponse.json({ error: 'Database unavailable' }, { status: 500 });
     }
 
-    // Check if user profile already exists
-    const userDoc = await db.collection('users').doc(email).get();
-    
-    if (!userDoc.exists) {
-      // Create new user profile
-      const userData = {
-        uid,
-        email,
-        displayName: displayName || '',
-        createdAt: new Date(),
-        lastLoginAt: new Date(),
-        subscriptionStatus: 'none',
-        trialUsed: false,
-        customClaims: {
-          hasAccess: false,
-          role: 'user'
-        }
-      };
+    // Create user profile document using UID as document ID
+    const userProfile = {
+      uid: user.uid,
+      email: user.email,
+      displayName: displayName || null,
+      subscriptionStatus: 'none',
+      hasAccess: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      lastLoginAt: new Date()
+    };
 
-      await db.collection('users').doc(email).set(userData);
-      
-      return NextResponse.json({ 
-        success: true, 
-        message: 'User profile created',
-        user: userData 
-      });
-    } else {
-      // Update last login
-      await db.collection('users').doc(email).update({
-        lastLoginAt: new Date()
-      });
-      
-      return NextResponse.json({ 
-        success: true, 
-        message: 'User profile updated',
-        user: userDoc.data() 
-      });
-    }
+    // Use UID as document ID, merge to avoid overwriting existing data
+    await db.collection('users').doc(user.uid).set(userProfile, { merge: true });
+
+    console.log(`✅ User profile created/updated for: ${user.email} (UID: ${user.uid})`);
+
+    return NextResponse.json({ 
+      success: true, 
+      message: 'User profile created successfully',
+      uid: user.uid
+    });
 
   } catch (error) {
     console.error('Error creating user profile:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to create user profile' },
+      { status: 500 }
+    );
   }
 }
