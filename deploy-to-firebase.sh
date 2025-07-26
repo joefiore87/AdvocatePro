@@ -48,7 +48,7 @@ read
 
 # Deploy to Firebase App Hosting
 echo "🔄 Starting deployment..."
-firebase deploy --only apphosting
+firebase deploy --only apphosting --yes
 
 echo ""
 echo "✅ Deployment initiated!"
