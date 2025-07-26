@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     };
 
     // Get all documents from each collection
-    const collections = ['users', 'payments', 'subscriptions'];
+    const collections = ['users', 'payments', 'subscriptions', 'userProfiles'];
     
     for (const collectionName of collections) {
       console.log(`Starting migration for ${collectionName} collection...`);
@@ -128,7 +128,7 @@ export async function GET(req: NextRequest) {
       subscriptions: { emailBasedDocs: 0, uidBasedDocs: 0 }
     };
 
-    const collections = ['users', 'payments', 'subscriptions'];
+    const collections = ['users', 'payments', 'subscriptions', 'userProfiles'];
     
     for (const collectionName of collections) {
       const snapshot = await db.collection(collectionName).get();

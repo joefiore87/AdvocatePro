@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Get user's generated letters
-    const lettersRef = db.collection('userProfiles').doc(user.email).collection('generatedLetters');
+    const lettersRef = db.collection('userProfiles').doc(user.uid).collection('generatedLetters');
     const lettersSnap = await lettersRef.orderBy('generatedAt', 'desc').get();
     
     const letters = lettersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));

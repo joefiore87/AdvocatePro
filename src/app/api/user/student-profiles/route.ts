@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Get user's student profiles
-    const profilesRef = db.collection('userProfiles').doc(user.email).collection('studentProfiles');
+    const profilesRef = db.collection('userProfiles').doc(user.uid).collection('studentProfiles');
     const profilesSnap = await profilesRef.orderBy('createdAt', 'desc').get();
     
     const profiles = profilesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
 
     const profileRef = await db
       .collection('userProfiles')
-      .doc(user.email)
+      .doc(user.uid)
       .collection('studentProfiles')
       .add(newProfile);
 

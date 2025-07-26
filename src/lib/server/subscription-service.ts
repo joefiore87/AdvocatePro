@@ -3,7 +3,7 @@ import { getFirestoreAdmin } from '@/lib/firebase-admin';
 
 export interface SubscriptionData {
   customerId: string;
-  email: string;
+  uid: string;
   subscriptionId: string;
   status: string; // e.g. active, canceled, past_due
   currentPeriodEnd: Date;
@@ -14,9 +14,9 @@ export interface SubscriptionData {
  * Check if a user has active access
  * Server-side only function
  */
-export async function hasValidSubscription(email: string): Promise<boolean> {
+export async function hasValidSubscription(uid: string): Promise<boolean> {
   try {
-    if (!email) return false;
+    if (!uid) return false;
     
     const db = await getFirestoreAdmin();
     if (!db) {
@@ -24,7 +24,7 @@ export async function hasValidSubscription(email: string): Promise<boolean> {
       return false;
     }
     
-    const subscriptionDoc = await db.collection('subscriptions').doc(email).get();
+    const subscriptionDoc = await db.collection('subscriptions').doc(uid).get();
     
     if (!subscriptionDoc.exists) {
       return false;
@@ -47,9 +47,9 @@ export async function hasValidSubscription(email: string): Promise<boolean> {
  * Get a user's subscription data
  * Server-side only function
  */
-export async function getUserSubscription(email: string): Promise<SubscriptionData | null> {
+export async function getUserSubscription(uid: string): Promise<SubscriptionData | null> {
   try {
-    if (!email) return null;
+    if (!uid) return null;
     
     const db = await getFirestoreAdmin();
     if (!db) {
@@ -57,7 +57,7 @@ export async function getUserSubscription(email: string): Promise<SubscriptionDa
       return null;
     }
     
-    const docSnap = await db.collection('subscriptions').doc(email).get();
+    const docSnap = await db.collection('subscriptions').doc(uid).get();
     
     if (docSnap.exists) {
       return docSnap.data() as SubscriptionData;
@@ -81,7 +81,7 @@ export async function createOrUpdateSubscription(data: SubscriptionData): Promis
       throw new Error('Firebase Admin not initialized');
     }
     
-    await db.collection('subscriptions').doc(data.email).set(data);
+    await db.collection('subscriptions').doc(data.uid).set(data);
   } catch (error) {
     console.error('Error saving subscription:', error);
     throw error;
