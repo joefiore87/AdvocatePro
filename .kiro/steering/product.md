@@ -2,67 +2,102 @@
 inclusion: always
 ---
 
-# Special Education Advocacy Toolkit - Product Guidelines
+# Special Education Advocacy Toolkit - AI Assistant Guidelines
+
+## 🚨 CRITICAL AUTHENTICATION BUG - PRIORITY FIX
+**Issue**: API routes expect `email` parameter but client sends `Authorization` header with Firebase token
+
+**Required Fix Pattern for ALL Protected API Routes:**
+```typescript
+const token = request.headers.get('authorization')?.replace('Bearer ', '');
+const decodedToken = await admin.auth().verifyIdToken(token);
+const userEmail = decodedToken.email;
+```
 
 ## Product Context
-A Next.js web application helping parents advocate for children with special education needs through letter generation, profile management, and educational resources.
+Next.js application for special education advocacy with letter generation, profile management, and educational resources. **CRITICAL**: Use person-first language ("children with disabilities" not "disabled children") and never provide legal advice.
 
-## Core Architecture Principles
-- **Privacy-First**: Store sensitive user data locally (localStorage/IndexedDB), never transmit without explicit consent
-- **Progressive Enhancement**: Core features work without JavaScript, enhanced with React
-- **Accessibility-First**: WCAG AA compliance required for all components
-- **Mobile-Responsive**: Design for mobile-first, enhance for desktop
+## Required Tech Stack
+- **Next.js 15.3.3**: App Router only, server components by default
+- **TypeScript**: Strict mode - all code must be fully typed
+- **Tailwind CSS**: ONLY styling method - never use inline styles or CSS modules
+- **Firebase**: Auth + Firestore (`src/lib/firebase.ts`)
+- **Stripe**: Payments (`src/app/api/stripe/`)
+- **shadcn/ui**: UI components (`src/components/ui/`)
+- **Zod**: All API validation required
 
-## Language & Content Conventions
-- **Person-First Language**: Always use "children with disabilities" not "disabled children"
+## Privacy-First Rules (NON-NEGOTIABLE)
+- **Sensitive Data**: Store user profiles in localStorage only, never transmit without explicit consent
+- **Cloud Storage**: Firebase stores ONLY user ID and subscription status
+- **Processing**: Letter generation and profile merging must be client-side only
+- **Encryption**: Encrypt sensitive data in localStorage
+
+## Mandatory Code Patterns
+
+### API Route Structure
+```typescript
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
+const schema = z.object({ /* define schema */ });
+
+export async function POST(request: Request) {
+  try {
+    // Authentication for protected routes
+    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    
+    const body = await request.json();
+    const data = schema.parse(body);
+    
+    return NextResponse.json({ success: true, data });
+  } catch (error) {
+    return NextResponse.json({ error: "Message" }, { status: 400 });
+  }
+}
+```
+
+### Component Structure
+```typescript
+// Server component (default)
+interface ComponentProps {
+  children: React.ReactNode;
+  data: UserProfile;
+}
+
+export default function Component({ children, data }: ComponentProps) {
+  return <div className="space-y-4">{children}</div>;
+}
+
+// Client component (when needed)
+"use client";
+```
+
+### File Organization
+- **Components**: `src/components/ui/` (primitives), `src/components/` (features)
+- **API Routes**: `src/app/api/[feature]/route.ts`
+- **Pages**: `src/app/[route]/page.tsx`
+- **Hooks**: `src/hooks/use-[feature].tsx`
+- **Types**: `src/lib/types.ts`
+
+## Content & Language Rules
+- **Person-First Language**: "children with disabilities" NOT "disabled children"
 - **Tone**: Supportive, empowering, professional but approachable
-- **Terminology**: Explain special education jargon, use plain language
-- **Legal Boundaries**: Provide information, never legal advice or guarantees
+- **Legal Boundaries**: Provide information, NEVER legal advice
+- **Accessibility**: WCAG AA compliance required for all components
 
-## Feature Implementation Rules
+## Security & Validation
+- **Input Validation**: All API inputs use Zod schemas
+- **Authentication**: Firebase Auth with proper token verification
+- **Error Handling**: Never expose sensitive information in responses
+- **Data Sanitization**: All user inputs before storage
 
-### Profile Management
-- Store profiles in localStorage with encryption
-- Implement data export (JSON/PDF) and import functionality
-- Never auto-save sensitive data to cloud without explicit user action
-- Validate all profile data with Zod schemas
+## Development Commands
+```bash
+npm run dev          # Local development
+npm run typecheck    # Required before commits
+npm run lint         # Code quality check
+firebase deploy      # Production deployment
+```
 
-### Letter Generation
-- Use template system in `src/lib/templates.ts`
-- Merge profile data with templates client-side only
-- Provide preview before generation
-- Support PDF export with proper formatting
-
-### Authentication & Payments
-- Firebase Auth for user accounts (non-sensitive data only)
-- Stripe for subscription management
-- Separate authenticated features from core advocacy tools
-- Graceful degradation when not authenticated
-
-## UI/UX Implementation Standards
-- Use shadcn/ui components consistently
-- Implement loading states for all async operations
-- Provide clear error messages with actionable next steps
-- Use progressive disclosure for complex forms
-- Ensure keyboard navigation works throughout
-
-## Code Style Requirements
-- TypeScript strict mode enabled
-- Use React Server Components where appropriate
-- Implement proper error boundaries
-- Follow Next.js App Router patterns
-- Use Tailwind CSS classes, avoid inline styles
-
-## Data Security Rules
-- Never log sensitive user data
-- Use HTTPS for all external requests
-- Implement proper input validation and sanitization
-- Store minimal data in Firebase (user ID, subscription status only)
-- Provide clear data deletion options
-
-## Content Creation Guidelines
-- Educational content must be factually accurate
-- Cite authoritative sources (IDEA, state regulations)
-- Review all templates with special education professionals
-- Use inclusive language throughout
-- Avoid making promises about outcomes
+**CRITICAL**: Fix authentication bug first, then maintain existing high-quality architecture. Do NOT rebuild - enhance existing structure.
