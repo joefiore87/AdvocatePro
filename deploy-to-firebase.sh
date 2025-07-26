@@ -48,7 +48,7 @@ read
 
 # Deploy to Firebase App Hosting
 echo "🔄 Starting deployment..."
-firebase apphosting:rollout --backend turboparentpro
+firebase deploy --only apphosting
 
 echo ""
 echo "✅ Deployment initiated!"

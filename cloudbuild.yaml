@@ -9,6 +9,10 @@ steps:
     entrypoint: 'npm'
     args: ['run', 'build']
     
+  # Copy standalone output to the root
+  - name: 'gcr.io/cloud-builders/cp'
+    args: ['-r', '.next/standalone/.', '.']
+    
   # Deploy to Firebase App Hosting
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'bash'

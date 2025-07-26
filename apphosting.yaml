@@ -6,6 +6,84 @@ runConfig:
 # Build configuration is handled by App Hosting framework detection
 # No explicit build commands needed for Next.js
 
+customRoutes:
+  - path: "/.git/*"
+    statusCode: 404
+  - path: "/.env"
+    statusCode: 404
+  - path: "/.svn/wc.db"
+    statusCode: 404
+  - path: "/.env.production"
+    statusCode: 404
+  - path: "/settings.py"
+    statusCode: 404
+  - path: "/.vscode/sftp.json"
+    statusCode: 404
+  - path: "/feed"
+    statusCode: 404
+  - path: "/server.key"
+    statusCode: 404
+  - path: "/config.php"
+    statusCode: 404
+  - path: "/docker-compose.yml"
+    statusCode: 404
+  - path: "/cloud-config.yml"
+    statusCode: 404
+  - path: "/web.config"
+    statusCode: 404
+  - path: "/config/production.json"
+    statusCode: 404
+  - path: "/db/schema.rb"
+    statusCode: 404
+  - path: "/secrets.json"
+    statusCode: 404
+  - path: "/_vti_pvt/service.pwd"
+    statusCode: 404
+  - path: "/.ssh/id_ecdsa"
+    statusCode: 404
+  - path: "/wp-admin/setup-config.php"
+    statusCode: 404
+  - path: "/.ssh/id_rsa"
+    statusCode: 404
+  - path: "/wp-config.php"
+    statusCode: 404
+  - path: "/backup.tar.gz"
+    statusCode: 404
+  - path: "/config.yml"
+    statusCode: 404
+  - path: "/backup.sql"
+    statusCode: 404
+  - path: "/.ssh/id_ed25519"
+    statusCode: 404
+  - path: "/config.json"
+    statusCode: 404
+  - path: "/dump.sql"
+    statusCode: 404
+  - path: "/.git/HEAD"
+    statusCode: 404
+  - path: "/database_backup.sql"
+    statusCode: 404
+  - path: "/server-status"
+    statusCode: 404
+  - path: "/backup.zip"
+    statusCode: 404
+  - path: "/.aws/credentials"
+    statusCode: 404
+  - path: "/api/.env"
+    statusCode: 404
+  - path: "/config.yaml"
+    statusCode: 404
+  - path: "/phpinfo.php"
+    statusCode: 404
+  - path: "/database.sql"
+    statusCode: 404
+  - path: "/user_secrets.yml"
+    statusCode: 404
+  - path: "/config.xml"
+    statusCode: 404
+  - path: "/etc/ssl/private/server.key"
+    statusCode: 404
+
 env:
   # Public environment variables
   - variable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -19,7 +97,7 @@ env:
   
   # Firebase Client Configuration
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-    value: AIzaSyD6OJWg2YSFiXqrqBoRH-S3g_CZqJCsXeA
+    value: AIzaSyD6OJWg2YSFiXqrqBoRH-S3g_CZJCsXeA
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
     value: advocate-empower.firebaseapp.com
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
@@ -37,7 +115,7 @@ env:
   - variable: FIREBASE_ADMIN_CLIENT_EMAIL
     value: firebase-adminsdk-fbsvc@advocate-empower.iam.gserviceaccount.com
   - variable: FIREBASE_ADMIN_PRIVATE_KEY
-    value: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDCEP5eCqIjRdLc\nVvcj6ke44I6hOA+MJYkqfhl6YmsL/UQZSti9K5EZzeTAED2QY8eej1E4TQH9f/7a\nxrHu51WFmWnKKR/l9zJkxpurI32tQR43YAdHlpc244uIeTVsnGl2TtGPFKa0G+49\nRA2pG+W51MOIem049f5EMhqqNQi9sxEeeDvE9sHigaTd4gEMW4Hn5+tDeHYfIh9F\nKxMkakK7e0bMVEZXtBlocS6tu1iISXgF/5JgCyBcT2yRTVw1J/3dMyM4Vx7p94b1\nXyfR8+SDpM65hxtuMNI0aUonNkUsty0b63qp6ovA4LdjoXasIGorpGdVB6gyl+Ai\niHPB5yp1AgMBAAECggEAG8wqA00WnbgkqfcIU2v9dgKEVkdyGABQaMvDLn/mbBiM\n++p3/TC+X1SEouuF8Ka6MytoK4kBnflgMfTVYS5gVlCmkenYwyyTWqgFfZAJ3RqU\nuhiBMm85nbJzjCArLNwtUbWcgsLR1hP3c23KCc0QgiZzE5t7BaEGw2dB4TDTiF2x\nVjomB4HTkacLbrzNVg+IviZ+vkO0weZi6FeutJ78OjXAz+CoBIG49r4FyfTRiTKl\nm0fnFTX4TM7SpuFoS/r0x2/bk/E8YRh8Opu9BZR7OzmRQ3IUTUzdi56rfhKVlN7w\nXA1TiBuEOTT/12Git1VBM12+5qs9SvyddIsDrF+WiQKBgQDlniUb+3/aMj99g+eB\n9kMV0HU1As37YOeYRbRHIhiV+rksxbcenAbkb1Xc8jC4Y51x7PXhvEAKk65XDiwZ\nL+w5Va611csLnsXDMWQPRgGXMbhV7xgSm2y6V46eA89mmWcZulc58g0vX8qk9FIk\n0EQTwY1PeyOAwNKhwUC+mMMjhwKBgQDYXSjPo29LXk1SxcOyxKjFmlm5xu9fvNDS\naLaU/IvLAlX9lVh0L9bM29PM/0P9aK4qVWR0mHTQS3GhIOrHbYBAT1J1K/Jw7r2z\nUZcBBX8yebL4wQi9UX0hNmMthuuBfOHLoch6h5EaSp471vP/DnU4os5Kgksqfhlx\nnhTHMb35IwKBgE9MO1Kbm37WRZjqOcRnMKnS8PdavZon0DOFNwot20HIcbTlnyUC\nC1tOm9+PAIZdWJ1kkVHg+ljswZOtAEu+gh0W2xxO9i1QKsoLP5wKuDfn4tpClRSv\n+m+sF0O42yJ6reFzufX4AteuhERNYCT4i9oqyMt/Ijav4M4d+GcaSKH3AoGAWwNV\nF4L4XgvdGuR13c078WNsOumj5/HVJa1GoIVbiJoC8hjQjI9TG/mcrq7yOra+DLC/\nAQzgln4l3lGqcRluyZ6UYRWLdlX3FmdLzfIx/1mSH3GT649Lw5zNO2l1x5JwqOf1\nHRXJw/V/ekyBdtjuFlTl0hHc7JL+wPxuYRxbfWECgYEA2Wng0foNJk0adFkO0msh\nds1+D6wai9TfGNyo6Zzw61lglsXXFNoO5DQZyeHSwz0fl7k5K6A4PIFkpV3t2O1M\nkqI5WRLyMxgk8YMuqV2Ww+Yx3j2ZW+l2JLlrx92C7PTDz3QnHKoUEsS0O+yl0UiF\nytUtdBuFQEYPHUOJCrdUjAM=\n-----END PRIVATE KEY-----"
+    value: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDCEP5eCqIjRdLc\nVvcj6ke44I6hOA+MJYkqfhl6YmsL/UQZSti9K5EZzeTAED2QY8eej1E4TQH9f/7a\nxrHu51WFmWnKKR/l9zJkxpurI32tQR43YAdHlpc244uIeTVsnGl2TtGPFKa0G+49\nRA2pG+W51MOIem049f5EMhqqNQi9sxEeeDvE9sHigaTd4gEMW4Hn5+tDeHYfIh9F\nKxMkakK7e0bMVEZXtBlocS6tu1iISXgF/5JgCyBcT2yRTVw1J/3dMyM4Vx7p94b1\nXyfR8+SDpM65hxtuMNI0aUonNkUsty0b63qp6ovA4LdjoXasIGorpGdVB6gyl+Ai\niHPB5yp1AgMBAAECggEAG8wqA00WnbgkqfcIU2v9dgKEVkdyGABQaMvDLn/mbBiM\n++p3/TC+X1SEouuF8Ka6MytoK4kBnflgMfTVYS5gVlCmkenYwyyTWqgFfZAJ3RqU\nuhiBMm85nbJzjCArLNwtUbWcgsLR1hP3c23KCc0QgiZzE5t7BaEGw2dB4TDTiF2x\nVjomB4HTkacLbrzNVg+IviZ+vkO0weZi6FeutJ78OjXAz+CoBIG49r4FyfTRiTKl\nm0fnFTX4TM7SpuFoS/r0x2/bk/E8YRh8Opu9BZR7OzmRQ3IUTUzdi56rfhKVlN7w\nXA1TiBuEOTT/12Git1VBM12+5qs9SvyddIsDrF+WiQKBgQDlniUb+3/aMj99g+eB\n9kMV0HU1As37YOeYRbRHIhiV+rksxbcenAbkb1Xc8jC4Y51x7PXhvEAKk65XDiwZ\nL+w5Va611csLnsXDMWQPRgGXMbhV7xgSm2y6V46eA89mmWcZulc58g0vX8qk9FIk\n0EQTwY1PeyOAwNKhwUC+mMMjhwKBgQDYXSjPo29LXk1SxcOyxKjFmlm5xu9fvNDS\naLaU/IvLAlX9lVh0L9bM29PM/0P9aK4qVWR0mHTQS3GhIOrHbYBAT1J1K/Jw7r2z\nUZcBBX8yebL4wQi9UX0hNmMthuuBfOHLoch6h5EaSp471vP/DnU4os5Kgksqfhlx\nnhTHMb35IwKBgE9MO1Kbm37WRZjqOcRnMKnS8PdavZon0DOFNwot20HIcbTlnyUC\nC1tOm9+PAIZdWJ1kkVHg+ljswZOtAEu+gh0W2xxO9i1QKsoLP5wKuDfn4tpClRSv\n+m+sF0O42yJ6reFzufX4AteuhERNYCT4i9oqyMt/Ijav4M4d+GcaSKH3AoGAWwNV\nF4L4XgvdGuR13c078WNsOumj5/HVJa1GoIVbiJoC8hjQjI9TG/mcrq7yOra+DLC/\nAQzgln4l3lGqcRluyZ6UYRWLdlX3FmdLzfIx/1mSH3GT649Lw5zNO2l1x5JwqOf1\nHRXJw/V/ekyBdtjuFlTl0hHc7JL+wPxuYRxbfWECgYEA2Wng0foNJk0adFkO0msh\nds1+D6wai9TfGNyo6Zzw61lglsXXTNoO5DQZyeHSwz0fl7k5K6A4PIFkpV3t2O1M\nkqI5WRLyMxgk8YMuqV2Ww+Yx3j2ZW+l2JLlrx92C7PTDz3QnHKoUEsS0O+yl0UiF\nytUtdBuFQEYPHUOJCrdUjAM="
   
   # Stripe Configuration
   - variable: STRIPE_SECRET_KEY
