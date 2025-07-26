@@ -30,13 +30,17 @@ export async function verifyAuthToken(req: NextRequest): Promise<AuthUser | null
     }
 
     const decodedToken = await auth.verifyIdToken(token);
+    const userEmail = decodedToken.email || '';
+    
+    // Admin access: joejfiore@gmail.com always has full access
+    const isOwner = userEmail === 'joejfiore@gmail.com';
     
     return {
       uid: decodedToken.uid,
-      email: decodedToken.email || '',
-      hasAccess: decodedToken.hasAccess || false,
-      role: decodedToken.role || 'user',
-      subscriptionStatus: decodedToken.subscriptionStatus || 'none',
+      email: userEmail,
+      hasAccess: isOwner || decodedToken.hasAccess || false,
+      role: isOwner ? 'admin' : (decodedToken.role || 'user'),
+      subscriptionStatus: isOwner ? 'owner' : (decodedToken.subscriptionStatus || 'none'),
       expiresAt: decodedToken.expiresAt || null
     };
   } catch (error) {
