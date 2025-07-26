@@ -31,7 +31,6 @@ const nextConfig: NextConfig = {
     return config;
   },
   
-  output: 'standalone',
   distDir: '.next',
 };
 

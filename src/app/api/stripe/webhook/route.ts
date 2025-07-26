@@ -131,6 +131,7 @@ export async function POST(req: NextRequest) {
   const signature = req.headers.get('stripe-signature') as string;
   
   let event;
+  let firestore;
   
   try {
     event = stripe.webhooks.constructEvent(
@@ -139,7 +140,7 @@ export async function POST(req: NextRequest) {
       process.env.STRIPE_WEBHOOK_SECRET!
     );
     
-    const firestore = await getFirestoreAdmin();
+    firestore = await getFirestoreAdmin();
     const auth = await getAuthAdmin();
     
     if (!firestore || !auth) {

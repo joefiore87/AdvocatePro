@@ -7,6 +7,7 @@ interface AuthUser {
   hasAccess?: boolean;
   role?: string;
   subscriptionStatus?: string;
+  expiresAt?: number;
 }
 
 /**
@@ -35,7 +36,8 @@ export async function verifyAuthToken(req: NextRequest): Promise<AuthUser | null
       email: decodedToken.email || '',
       hasAccess: decodedToken.hasAccess || false,
       role: decodedToken.role || 'user',
-      subscriptionStatus: decodedToken.subscriptionStatus || 'none'
+      subscriptionStatus: decodedToken.subscriptionStatus || 'none',
+      expiresAt: decodedToken.expiresAt || null
     };
   } catch (error) {
     console.error('Error verifying token:', error);
