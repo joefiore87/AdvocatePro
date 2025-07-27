@@ -7,10 +7,10 @@ runConfig:
 
 env:
   # Firebase Configuration (public)
-  NEXT_PUBLIC_FIREBASE_API_KEY: "AIzaSyD6OJWg2YSFiXqrqBoRH-S3g_CZqJCsXeA"
+  NEXT_PUBLIC_FIREBASE_API_KEY: "AIzaSyD6OJWg2YSFiXqrqBoRH-S3g_CZJCsXeA"
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "advocate-empower.firebaseapp.com"
   NEXT_PUBLIC_FIREBASE_PROJECT_ID: "advocate-empower"
-  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: "advocate-empower.appspot.com"
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: "advocate-empower.firebasestorage.app"
   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "662566433758"
   NEXT_PUBLIC_FIREBASE_APP_ID: "1:662566433758:web:ae5cc7edb538f92500634f"
   
@@ -25,11 +25,12 @@ env:
   
   # Application Configuration  
   NEXT_PUBLIC_APP_URL: "https://iepturboparentpro--advocate-empower.us-central1.hosted.app"
-  MAINTENANCE_MODE: "true"
-  MAINTENANCE_MESSAGE: "Site is being updated. Please check back soon!"
-  DISABLE_PAYMENTS: "true"
+  MAINTENANCE_MODE: "false"
+  DISABLE_PAYMENTS: "false"
   
-  # Temporary hardcoded secrets for testing (will replace with secrets)
-  STRIPE_SECRET_KEY: "sk_test_temp"
-  STRIPE_WEBHOOK_SECRET: "whsec_temp"
-  FIREBASE_ADMIN_PRIVATE_KEY: "temp_key"
+  # Stripe Configuration (private)
+  STRIPE_SECRET_KEY: "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"
+  STRIPE_WEBHOOK_SECRET: "whsec_zIhIIcXFuH3dJYxdxBWBe5ScxsiDuJox"
+  
+  # Firebase Admin Configuration (private)
+  FIREBASE_ADMIN_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDCEP5eCqIjRdLc\nVvcj6ke44I6hOA+MJYkqfhl6YmsL/UQZSti9K5EZzeTAED2QY8eej1E4TQH9f/7a\nxrHu51WFmWnKKR/l9zJkxpurI32tQR43YAdHlpc244uIeTVsnGl2TtGPFKa0G+49\nRA2pG+W51MOIem049f5EMhqqNQi9sxEeeDvE9sHigaTd4gEMW4Hn5+tDeHYfIh9F\nKxMkakK7e0bMVEZXtBlocS6tu1iISXgF/5JgCyBcT2yRTVw1J/3dMyM4Vx7p94b1\nXyfR8+SDpM65hxtuMNI0aUonNkUsty0b63qp6ovA4LdjoXasIGorpGdVB6gyl+Ai\niHPB5yp1AgMBAAECggEAG8wqA00WnbgkqfcIU2v9dgKEVkdyGABQaMvDLn/mbBiM\n++p3/TC+X1SEouuF8Ka6MytoK4kBnflgMfTVYS5gVlCmkenYwyyTWqgFfZAJ3RqU\nuhiBMm85nbJzjCArLNwtUbWcgsLR1hP3c23KCc0QgiZzE5t7BaEGw2dB4TDTiF2x\nVjomB4HTkacLbrzNVg+IviZ+vkO0weZi6FeutJ78OjXAz+CoBIG49r4FyfTRiTKl\nm0fnFTX4TM7SpuFoS/r0x2/bk/E8YRh8Opu9BZR7OzmRQ3IUTUzdi56rfhKVlN7w\nXA1TiBuEOTT/12Git1VBM12+5qs9SvyddIsDrF+WiQKBgQDlniUb+3/aMj99g+eB\n9kMV0HU1As37YOeYRbRHIhiV+rksxbcenAbkb1Xc8jC4Y51x7PXhvEAKk65XDiwZ\nL+w5Va611csLnsXDMWQPRgGXMbhV7xgSm2y6V46eA89mmWcZulc58g0vX8qk9FIk\n0EQTwY1PeyOAwNKhwUC+mMMjhwKBgQDYXSjPo29LXk1SxcOyxKjFmlm5xu9fvNDS\naLaU/IvLAlX9lVh0L9bM29PM/0P9aK4qVWR0mHTQS3GhIOrHbYBAT1J1K/Jw7r2z\nUZcBBX8yebL4wQi9UX0hNmMthuuBfOHLoch6h5EaSp471vP/DnU4os5Kgksqfhlx\nnhTHMb35IwKBgE9MO1Kbm37WRZjqOcRnMKnS8PdavZon0DOFNwot20HIcbTlnyUC\nC1tOm9+PAIZdWJ1kkVHg+ljswZOtAEu+gh0W2xxO9i1QKsoLP5wKuDfn4tpClRSv\n+m+sF0O42yJ6reFzufX4AteuhERNYCT4i9oqyMt/Ijav4M4d+GcaSKH3AoGAWwNV\nF4L4XgvdGuR13c078WNsOumj5/HVJa1GoIVbiJoC8hjQjI9TG/mcrq7yOra+DLC/\nAQzgln4l3lGqcRluyZ6UYRWLdlX3FmdLzfIx/1mSH3GT649Lw5zNO2l1x5JwqOf1\nHRXJw/V/ekyBdtjuFlTl0hHc7JL+wPxuYRxbfWECgYEA2Wng0foNJk0adFkO0msh\nds1+D6wai9TfGNyo6Zzw61lglsXXTNoO5DQZyeHSwz0fl7k5K6A4PIFkpV3t2O1M\nkqI5WRLyMxgk8YMuqV2Ww+Yx3j2ZW+l2JLlrx92C7PTDz3QnHKoUEsS0O+yl0UiF\nytUtdBuFQEYPHUOJCrdUjAM=\n-----END PRIVATE KEY-----"
