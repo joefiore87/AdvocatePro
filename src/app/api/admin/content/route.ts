@@ -9,6 +9,7 @@ export const GET = withAdminAuth(async (req: NextRequest, adminUser: AdminUser) 
   if (limited) return limited;
 
   try {
+      const db = getDbOrThrow();
     const content = await getTransformedContent();
     return NextResponse.json({ content });
   } catch (error) {

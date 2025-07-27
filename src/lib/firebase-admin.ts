@@ -137,14 +137,36 @@ export function getDb() {
 
 // Helper function to get db with error handling for routes
 export function getDbOrThrow() {
-  const database = getDb();
-  if (!database) {
+  try {
+    const database = getDb();
+    if (!database) {
+      throw new Error('Firebase Admin not properly configured');
+    }
+    return database;
+  } catch (error) {
+    console.error('Error getting database instance:', error);
     throw new Error('Firebase Admin not properly configured');
   }
-  return database;
 }
 
-// Export a direct db instance for convenience
-export const db = getDb();
+// Export a function to get db instance safely
+export function getDbSafe() {
+  try {
+    return getDb();
+  } catch (error) {
+    console.error('Error getting db instance:', error);
+    return null;
+  }
+}
+
+// Export a direct db instance for convenience (with null fallback)
+export const db = (() => {
+  try {
+    return getDb();
+  } catch (error) {
+    console.warn('Firebase Admin not available during build time:', error.message);
+    return null;
+  }
+})();
 
 export default firebaseApp;

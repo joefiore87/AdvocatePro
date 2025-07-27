@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase-admin';
+import { getDbOrThrow } from '@/lib/firebase-admin';
 import { withAdminAuth, AdminUser } from '@/lib/admin-auth';
 import { rateLimiters } from '@/lib/rate-limit';
 
@@ -9,6 +9,8 @@ export const GET = withAdminAuth(async (req: NextRequest, adminUser: AdminUser) 
     if (limited) return limited;
 
     try {
+      const db = getDbOrThrow();
+      const db = getDbOrThrow();
       // Get user statistics
       const usersSnapshot = await db.collection('users').get();
       const totalUsers = usersSnapshot.size;

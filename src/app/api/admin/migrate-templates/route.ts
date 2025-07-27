@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase-admin';
+import { getDbOrThrow } from '@/lib/firebase-admin';
 import { AdminTemplateService } from '@/lib/admin-template-service';
 import { withAdminAuth } from '@/lib/admin-auth';
 import { rateLimiters } from '@/lib/rate-limit';
