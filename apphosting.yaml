@@ -26,6 +26,7 @@ env:
   # Application Configuration
   NEXT_PUBLIC_APP_URL: "https://iepturboparentpro--advocate-empower.us-central1.hosted.app"
   MAINTENANCE_MODE: "false"
+  MAINTENANCE_MESSAGE: ""
   DISABLE_PAYMENTS: "false"
 
 secretEnv:
