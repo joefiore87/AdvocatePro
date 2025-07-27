@@ -9,6 +9,7 @@ async function handleGetProfileBuilder(req: NextRequest) {
   const limited = await rateLimiters.admin(req);
   if (limited) return limited;
 
+  const db = getDbOrThrow();
   const adminConfigRef = db.collection('admin_config').doc('profile_builder');
   const doc = await adminConfigRef.get();
   
@@ -55,6 +56,7 @@ async function handleUpdateProfileBuilder(req: NextRequest) {
     }
   }
   
+  const db = getDbOrThrow();
   const adminConfigRef = db.collection('admin_config').doc('profile_builder');
   
   const updateData = {

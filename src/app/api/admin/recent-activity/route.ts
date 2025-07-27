@@ -16,6 +16,7 @@ async function handleGetRecentActivity(req: NextRequest) {
   const limited = await rateLimiters.admin(req);
   if (limited) return limited;
 
+  const db = getDbOrThrow();
   const activities: RecentActivity[] = [];
   
   // Get recent user registrations

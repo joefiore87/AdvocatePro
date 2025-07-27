@@ -27,6 +27,7 @@ async function handleGetAppearance(req: NextRequest) {
   const limited = await rateLimiters.admin(req);
   if (limited) return limited;
 
+  const db = getDbOrThrow();
   const adminConfigRef = db.collection('admin_config').doc('appearance');
   const doc = await adminConfigRef.get();
   
@@ -63,6 +64,7 @@ async function handleUpdateAppearance(req: NextRequest) {
     }
   }
   
+  const db = getDbOrThrow();
   const adminConfigRef = db.collection('admin_config').doc('appearance');
   
   const updateData = {

@@ -164,7 +164,7 @@ export const db = (() => {
   try {
     return getDb();
   } catch (error) {
-    console.warn('Firebase Admin not available during build time:', error.message);
+    console.warn('Firebase Admin not available during build time:', (error as Error).message);
     return null;
   }
 })();

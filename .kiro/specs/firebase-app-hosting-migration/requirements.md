@@ -34,6 +34,7 @@ The project currently has two live Firebase deployments: a working but accidenta
 
 #### Acceptance Criteria
 
+
 1. WHEN comparing configurations THEN all necessary environment variables SHALL be identified and migrated
 2. WHEN the App Hosting site runs THEN it SHALL have the same functionality as the working classic hosting site
 3. WHEN external integrations (Stripe, etc.) are tested THEN they SHALL work correctly with the new deployment

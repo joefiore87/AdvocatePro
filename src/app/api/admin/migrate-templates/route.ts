@@ -9,6 +9,7 @@ async function handleMigrateTemplates(req: NextRequest) {
   const limited = await rateLimiters.admin(req);
   if (limited) return limited;
 
+  const db = getDbOrThrow();
   // Check if migration has already been done
   const adminConfigRef = db.collection('admin_config').doc('templates');
   const doc = await adminConfigRef.get();

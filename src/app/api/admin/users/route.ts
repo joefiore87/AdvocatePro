@@ -8,6 +8,7 @@ async function handleGetUsers(req: NextRequest) {
   const limited = await rateLimiters.admin(req);
   if (limited) return limited;
 
+  const db = getDbOrThrow();
   const usersSnapshot = await db.collection('users').get();
   const users: any[] = [];
 

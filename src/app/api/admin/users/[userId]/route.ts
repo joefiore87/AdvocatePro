@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, getAuthAdmin } from '@/lib/firebase-admin';
+import { getDbOrThrow, getAuthAdmin } from '@/lib/firebase-admin';
 import { withAdminAuth, AdminUser } from '@/lib/admin-auth';
 import { rateLimiters } from '@/lib/rate-limit';
 
@@ -17,6 +17,7 @@ async function handleGetUser(
 
   const userId = params.userId;
   
+  const db = getDbOrThrow();
   // Get user document
   const userDoc = await db.collection('users').doc(userId).get();
   
@@ -57,6 +58,7 @@ async function handleUpdateUser(
   const userId = params.userId;
   const updates = await req.json();
   
+  const db = getDbOrThrow();
   // Update user document
   const userRef = db.collection('users').doc(userId);
   await userRef.update({

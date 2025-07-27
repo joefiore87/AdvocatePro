@@ -18,6 +18,7 @@ async function handleGetTemplate(
 
   const templateId = params.id;
   
+  const db = getDbOrThrow();
   const adminConfigRef = db.collection('admin_config').doc('templates');
   const doc = await adminConfigRef.get();
   
@@ -53,6 +54,7 @@ async function handleUpdateTemplate(
     return NextResponse.json({ error: 'Validation failed', errors }, { status: 400 });
   }
   
+  const db = getDbOrThrow();
   const adminConfigRef = db.collection('admin_config').doc('templates');
   const doc = await adminConfigRef.get();
   
@@ -111,6 +113,7 @@ async function handleDeleteTemplate(
 
   const templateId = params.id;
   
+  const db = getDbOrThrow();
   const adminConfigRef = db.collection('admin_config').doc('templates');
   const doc = await adminConfigRef.get();
   
