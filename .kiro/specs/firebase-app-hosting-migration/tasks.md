@@ -12,7 +12,7 @@
   - Validate that all Firebase and Stripe configuration variables are properly set
   - _Requirements: 1.3, 2.1, 2.2, 2.3, 3.1, 3.3_
 
-- [-] 3. Update build configuration for App Hosting compatibility
+- [ ] 3. Update build configuration for App Hosting compatibility
   - Review and update next.config.ts for App Hosting deployment requirements
   - Ensure TypeScript configuration is compatible with App Hosting build process
   - Verify all dependencies are properly declared and compatible

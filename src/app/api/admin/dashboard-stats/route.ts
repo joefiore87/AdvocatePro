@@ -10,7 +10,6 @@ export const GET = withAdminAuth(async (req: NextRequest, adminUser: AdminUser) 
 
     try {
       const db = getDbOrThrow();
-      const db = getDbOrThrow();
       // Get user statistics
       const usersSnapshot = await db.collection('users').get();
       const totalUsers = usersSnapshot.size;

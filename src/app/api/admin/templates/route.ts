@@ -12,7 +12,6 @@ export const GET = withAdminAuth(async (req: NextRequest, adminUser: AdminUser) 
 
     try {
       const db = getDbOrThrow();
-      const db = getDbOrThrow();
       const adminConfigRef = db.collection('admin_config').doc('templates');
       const doc = await adminConfigRef.get();
       
@@ -54,7 +53,6 @@ export const POST = withAdminAuth(async (req: NextRequest, adminUser: AdminUser)
     if (limited) return limited;
 
     try {
-      const db = getDbOrThrow();
       const db = getDbOrThrow();
       const templateData = await req.json();
       
