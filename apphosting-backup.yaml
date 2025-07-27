@@ -23,13 +23,19 @@ env:
   STRIPE_PRODUCT_ID: "prod_SjExJMgA6zeVFc"
   STRIPE_PRICE_ID: "price_1RnmTdAHtQyvoAZvn7tC8vvo"
   
-  # Application Configuration  
+  # Application Configuration
   NEXT_PUBLIC_APP_URL: "https://iepturboparentpro--advocate-empower.us-central1.hosted.app"
-  MAINTENANCE_MODE: "true"
-  MAINTENANCE_MESSAGE: "Site is being updated. Please check back soon!"
-  DISABLE_PAYMENTS: "true"
+  MAINTENANCE_MODE: "false"
+  MAINTENANCE_MESSAGE: ""
+  DISABLE_PAYMENTS: "false"
+
+secretEnv:
+  # Stripe Secrets
+  - variable: STRIPE_SECRET_KEY
+    secret: STRIPE_SECRET_KEY
+  - variable: STRIPE_WEBHOOK_SECRET
+    secret: STRIPE_WEBHOOK_SECRET
   
-  # Temporary hardcoded secrets for testing (will replace with secrets)
-  STRIPE_SECRET_KEY: "sk_test_temp"
-  STRIPE_WEBHOOK_SECRET: "whsec_temp"
-  FIREBASE_ADMIN_PRIVATE_KEY: "temp_key"
+  # Firebase Admin Secret
+  - variable: FIREBASE_ADMIN_PRIVATE_KEY
+    secret: FIREBASE_ADMIN_PRIVATE_KEY
