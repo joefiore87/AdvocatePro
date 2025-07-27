@@ -51,12 +51,12 @@ export async function verifyAdminToken(req: NextRequest): Promise<AdminUser | nu
 
 /**
  * Higher-order function for admin auth with HTTP method handlers
- * Usage: export const GET = withAdminAuth(async (req) => { ... });
+ * Usage: export const GET = withAdminAuth(async (req, adminUser) => { ... });
  */
-export function withAdminAuth<T extends unknown[]>(
-  handler: (req: NextRequest, ...context: T) => Promise<NextResponse>
+export function withAdminAuth(
+  handler: (req: NextRequest, adminUser: AdminUser) => Promise<NextResponse>
 ) {
-  return async (req: NextRequest, ...context: T): Promise<NextResponse> => {
+  return async (req: NextRequest): Promise<NextResponse> => {
     try {
       const adminUser = await verifyAdminToken(req);
       
@@ -67,7 +67,7 @@ export function withAdminAuth<T extends unknown[]>(
         );
       }
       
-      return await handler(req, ...context);
+      return await handler(req, adminUser);
     } catch (error) {
       console.error('Admin endpoint error:', error);
       return NextResponse.json(

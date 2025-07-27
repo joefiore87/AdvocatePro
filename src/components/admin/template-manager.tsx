@@ -410,7 +410,7 @@ export function TemplateManager({ onClose }: TemplateManagerProps) {
                 className="font-mono text-sm"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Use double braces for variables: {{childName}}, {{schoolName}}, etc.
+                Use double braces for variables: {`{{childName}}, {{schoolName}}`}, etc.
               </p>
             </div>
           </div>

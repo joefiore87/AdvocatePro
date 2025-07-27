@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db, getAuthAdmin } from '@/lib/firebase-admin';
-import { withAdminAuth } from '@/lib/admin-auth';
+import { withAdminAuth, AdminUser } from '@/lib/admin-auth';
 import { rateLimiters } from '@/lib/rate-limit';
 
 interface RouteParams {
@@ -78,5 +78,14 @@ async function handleUpdateUser(
   return NextResponse.json({ success: true });
 }
 
-export const GET = withAdminAuth(handleGetUser);
-export const PATCH = withAdminAuth(handleUpdateUser);
+export const GET = withAdminAuth(async (req: NextRequest, adminUser: AdminUser) => {
+  const url = new URL(req.url);
+  const userId = url.pathname.split('/').pop();
+  return handleGetUser(req, { params: { userId: userId! } });
+});
+
+export const PATCH = withAdminAuth(async (req: NextRequest, adminUser: AdminUser) => {
+  const url = new URL(req.url);
+  const userId = url.pathname.split('/').pop();
+  return handleUpdateUser(req, { params: { userId: userId! } });
+});

@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase-admin';
-import { withAdminAuth } from '@/lib/admin-auth';
+import { withAdminAuth, AdminUser } from '@/lib/admin-auth';
 import { rateLimiters } from '@/lib/rate-limit';
 
-export async function GET(req: NextRequest) {
-  return withAdminAuth(req, async (req, adminUser) => {
+export const GET = withAdminAuth(async (req: NextRequest, adminUser: AdminUser) => {
     // Rate limit
     const limited = await rateLimiters.admin(req);
     if (limited) return limited;
@@ -59,5 +58,4 @@ export async function GET(req: NextRequest) {
         { status: 500 }
       );
     }
-  });
-}
+});

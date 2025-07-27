@@ -3,10 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase-admin';
 import { AdminTemplateService } from '@/lib/admin-template-service';
 import { rateLimiters } from '@/lib/rate-limit';
-import { withAdminAuth } from '@/lib/admin-auth';
+import { withAdminAuth, AdminUser } from '@/lib/admin-auth';
 
-export async function GET(req: NextRequest) {
-  return withAdminAuth(req, async (req, adminUser) => {
+export const GET = withAdminAuth(async (req: NextRequest, adminUser: AdminUser) => {
     // Rate limit
     const limited = await rateLimiters.admin(req);
     if (limited) return limited;
@@ -45,11 +44,9 @@ export async function GET(req: NextRequest) {
       console.error('Error fetching templates:', error);
       return NextResponse.json({ error: 'Failed to fetch templates' }, { status: 500 });
     }
-  });
-}
+});
 
-export async function POST(req: NextRequest) {
-  return withAdminAuth(req, async (req, adminUser) => {
+export const POST = withAdminAuth(async (req: NextRequest, adminUser: AdminUser) => {
     // Rate limit
     const limited = await rateLimiters.admin(req);
     if (limited) return limited;
@@ -81,9 +78,9 @@ export async function POST(req: NextRequest) {
       const adminConfigRef = db.collection('admin_config').doc('templates');
       const doc = await adminConfigRef.get();
       
-      let currentData = { hardcoded: [], custom: [] };
+      let currentData: any = { hardcoded: [], custom: [] };
       if (doc.exists) {
-        currentData = doc.data() as any;
+        currentData = doc.data();
       }
       
       currentData.custom = [...(currentData.custom || []), newTemplate];
@@ -100,5 +97,4 @@ export async function POST(req: NextRequest) {
       console.error('Error creating template:', error);
       return NextResponse.json({ error: 'Failed to create template' }, { status: 500 });
     }
-  });
-}
+});

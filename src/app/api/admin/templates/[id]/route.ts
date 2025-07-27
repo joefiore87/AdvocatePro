@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase-admin';
 import { AdminTemplateService } from '@/lib/admin-template-service';
-import { withAdminAuth } from '@/lib/admin-auth';
+import { withAdminAuth, AdminUser } from '@/lib/admin-auth';
 import { rateLimiters } from '@/lib/rate-limit';
 
 interface RouteParams {
@@ -134,6 +134,20 @@ async function handleDeleteTemplate(
   return NextResponse.json({ error: 'Template not found or cannot be deleted' }, { status: 404 });
 }
 
-export const GET = withAdminAuth(handleGetTemplate);
-export const PUT = withAdminAuth(handleUpdateTemplate);
-export const DELETE = withAdminAuth(handleDeleteTemplate);
+export const GET = withAdminAuth(async (req: NextRequest, adminUser: AdminUser) => {
+  const url = new URL(req.url);
+  const id = url.pathname.split('/').pop();
+  return handleGetTemplate(req, { params: { id: id! } });
+});
+
+export const PUT = withAdminAuth(async (req: NextRequest, adminUser: AdminUser) => {
+  const url = new URL(req.url);
+  const id = url.pathname.split('/').pop();
+  return handleUpdateTemplate(req, { params: { id: id! } });
+});
+
+export const DELETE = withAdminAuth(async (req: NextRequest, adminUser: AdminUser) => {
+  const url = new URL(req.url);
+  const id = url.pathname.split('/').pop();
+  return handleDeleteTemplate(req, { params: { id: id! } });
+});

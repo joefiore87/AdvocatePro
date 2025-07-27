@@ -103,4 +103,48 @@ export async function getFirestoreAdmin() {
   }
 }
 
+// Export a function to get db instance with proper error handling
+export function getDb() {
+  if (typeof window !== 'undefined') {
+    throw new Error('Firebase Admin not available on client side');
+  }
+  
+  try {
+    // Initialize admin if not already done
+    if (admin.apps.length === 0) {
+      const serviceAccount = {
+        projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+        privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      } as admin.ServiceAccount;
+
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
+      });
+    }
+    
+    const firestore = admin.firestore();
+    firestore.settings({
+      databaseId: 'turboparent'
+    });
+    return firestore;
+  } catch (error) {
+    console.error('Error initializing db:', error);
+    throw error;
+  }
+}
+
+// Helper function to get db with error handling for routes
+export function getDbOrThrow() {
+  const database = getDb();
+  if (!database) {
+    throw new Error('Firebase Admin not properly configured');
+  }
+  return database;
+}
+
+// Export a direct db instance for convenience
+export const db = getDb();
+
 export default firebaseApp;
